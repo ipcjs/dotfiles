@@ -1,5 +1,4 @@
 CUR_FILE=$(readlink -f ${BASH_SOURCE[0]})
-REPO_DIR=$(readlink -f $(dirname $CUR_FILE)/..)
 echo $CUR_FILE
 
 # 交互式模式的初始化脚本, 防止被加载两次
@@ -15,8 +14,12 @@ case "$-" in
     *) return
 esac
 
+# expose repo dir
+export _DOTFILES_REPO_DIR=$(readlink -f $(dirname $CUR_FILE)/..)
+unset CUR_FILE
+
 # add bin to PATH
-export PATH="$REPO_DIR/bin:$PATH"
+export PATH="$_DOTFILES_REPO_DIR/bin:$PATH"
 
 # 整理 PATH，删除重复路径
 if [ -n "$PATH" ]; then
