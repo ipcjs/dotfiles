@@ -1,5 +1,5 @@
 CUR_FILE=$(readlink -f ${BASH_SOURCE[0]})
-echo $CUR_FILE
+echo source $CUR_FILE
 
 # 交互式模式的初始化脚本, 防止被加载两次
 if [ -z "$_INIT_SH_LOADED" ]; then
