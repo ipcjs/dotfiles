@@ -18,9 +18,6 @@ else
     unset _INIT_SH_LOADED
 fi
 
-echo ==install bin/*
-chmod +x $_DOTFILES_REPO_DIR/bin/lg
-
 if [ -z $(type -t z) ]; then
     echo ==install z...
     echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >> ~/.bashrc

@@ -1,5 +1,4 @@
-CUR_FILE=$(readlink -f ${BASH_SOURCE[0]})
-echo source $CUR_FILE
+echo source $(readlink -f ${BASH_SOURCE[0]})
 
 # 交互式模式的初始化脚本, 防止被加载两次
 if [ -z "$_INIT_SH_LOADED" ]; then
@@ -15,6 +14,7 @@ case "$-" in
 esac
 
 # expose repo dir
+CUR_FILE=$(readlink -f ${BASH_SOURCE[0]})
 export _DOTFILES_REPO_DIR=$(readlink -f $(dirname $CUR_FILE)/..)
 unset CUR_FILE
 
