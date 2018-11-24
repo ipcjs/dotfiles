@@ -18,6 +18,8 @@ esac
 export _DOTFILES_REPO_DIR=$(readlink -f $(dirname $CUR_FILE)/..)
 unset CUR_FILE
 
+export _INIT_SH_LOADED
+
 # add bin to PATH
 export PATH="$_DOTFILES_REPO_DIR/bin:$PATH"
 
