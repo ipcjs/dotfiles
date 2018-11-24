@@ -14,6 +14,8 @@ fi
 if [ -z "$_INIT_SH_LOADED" ]; then
     echo ==install init.sh...
     echo "source $_DOTFILES_REPO_DIR/etc/init.sh" >> ~/.bashrc
+else
+    unset _INIT_SH_LOADED
 fi
 
 echo ==install bin/*
