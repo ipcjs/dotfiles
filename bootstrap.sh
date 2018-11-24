@@ -21,7 +21,7 @@ fi
 echo ==install bin/*
 chmod +x $_DOTFILES_REPO_DIR/bin/lg
 
-if [ -z $(which z) ]; then
+if [ -z $(type -t z) ]; then
     echo ==install z...
     echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >> ~/.bashrc
 fi
