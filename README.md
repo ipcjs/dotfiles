@@ -3,7 +3,7 @@
 ## Install
 
 ```sh
-source <(curl -s https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.sh)
+source <(curl https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.sh)
 ```
 
 ## Update

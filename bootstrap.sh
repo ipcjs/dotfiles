@@ -1,4 +1,4 @@
-
+CUR_DIR=$(readlink -f $(pwd))
 if [ -z "$_DOTFILES_REPO_DIR" ]; then
     echo ==clone dofiles repo...
     sudo apt-get update
@@ -23,4 +23,7 @@ if [ -z $(type -t z) ]; then
     echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >> ~/.bashrc
 fi
 
+# end
+cd $CUR_DIR
+unset CUR_DIR
 source ~/.bashrc
