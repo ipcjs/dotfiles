@@ -1,0 +1,5 @@
+w
+free -m
+netstat -anp | grep "LISTEN "
+netstat -anp | grep -E "tcp.*ESTABLISHED" | awk '{print $4, $5}' | grep -P '^[\d.]+:(80|443|8888|8080|8388|8387|9999|900\d)' | cut -d: -f2 | sort -u
+last | grep still | grep ppp
