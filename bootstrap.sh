@@ -14,9 +14,14 @@ fi
 if [ -z "$_INIT_SH_LOADED" ]; then
     echo ==install init.sh...
     echo "source $_DOTFILES_REPO_DIR/etc/init.sh" >> ~/.bashrc
-    source ~/.bashrc
 fi
 
 echo ==install bin/*
 chmod +x $_DOTFILES_REPO_DIR/bin/lg
-chmod +x $_DOTFILES_REPO_DIR/bin/z.sh
+
+if [ -z $(which z) ]; then
+    echo ==install z...
+    echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >> ~/.bashrc
+fi
+
+source ~/.bashrc
