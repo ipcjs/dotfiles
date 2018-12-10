@@ -1,8 +1,10 @@
 CUR_DIR=$(readlink -f $(pwd))
 if [ -z "$_DOTFILES_REPO_DIR" ]; then
     echo ==clone dofiles repo...
-    sudo apt-get update
-    sudo apt-get install -y git
+    if [ -z $(which git) ]; then
+        sudo apt-get update
+        sudo apt-get install -y git
+    fi
     git clone https://github.com/ipcjs/dotfiles.git
     _DOTFILES_REPO_DIR=$(pwd)/dotfiles
 else
