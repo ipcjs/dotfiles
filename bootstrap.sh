@@ -5,6 +5,7 @@ if [ -z "$_DOTFILES_REPO_DIR" ]; then
         sudo apt-get update
         sudo apt-get install -y git
     fi
+    git --version
     git clone https://github.com/ipcjs/dotfiles.git
     _DOTFILES_REPO_DIR=$(pwd)/dotfiles
 else
