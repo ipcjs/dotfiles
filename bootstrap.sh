@@ -5,7 +5,11 @@ if [ -z "$_DOTFILES_REPO_DIR" ]; then
         sudo apt-get update
         sudo apt-get install -y git
     fi
+    # config git alias
     git --version
+    git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
+    git config --global alias.lga "log --all --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
+
     git clone https://github.com/ipcjs/dotfiles.git
     _DOTFILES_REPO_DIR=$(pwd)/dotfiles
 else
