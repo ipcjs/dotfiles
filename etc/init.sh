@@ -1,3 +1,4 @@
+#!/bin/bash
 echo source $(readlink -f ${BASH_SOURCE[0]})
 
 # 交互式模式的初始化脚本, 防止被加载两次
