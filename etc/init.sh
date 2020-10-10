@@ -40,3 +40,6 @@ if [ -n "$PATH" ]; then
 fi
 
 export PATH
+
+alias cnpm='npm --registry=https://registry.npm.taobao.org'
+alias ll='ls -al'
