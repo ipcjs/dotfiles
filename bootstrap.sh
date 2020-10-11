@@ -1,4 +1,8 @@
 #!/bin/bash
+rc_file=~/.bashrc
+if [ -n "$ZSH_VERSION" ]; then
+    rc_file=~/.zshrc
+fi
 CUR_DIR=$(readlink -f $(pwd))
 if [ -z "$_DOTFILES_REPO_DIR" ]; then
     echo '==clone dofiles repo...'
@@ -21,17 +25,17 @@ fi
 
 if [ -z "$_INIT_SH_LOADED" ]; then
     echo '==install init.sh...'
-    echo "source $_DOTFILES_REPO_DIR/etc/init.sh" >> ~/.bashrc
+    echo "source $_DOTFILES_REPO_DIR/etc/init.sh" >>$rc_file
 else
     unset _INIT_SH_LOADED
 fi
 
 if [ -z $(type -t z) ]; then
     echo '==install z...'
-    echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >> ~/.bashrc
+    echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >>$rc_file
 fi
 
 # end
 cd $CUR_DIR
 unset CUR_DIR
-source ~/.bashrc
+source $rc_file
