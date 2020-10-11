@@ -26,14 +26,16 @@ fi
 
 if [ -z "$_INIT_SH_LOADED" ]; then
     echo '==install init.sh...'
-    echo "source $DOTFILES_REPO_DIR/etc/init.sh" >>$rc_file
+    # shellcheck disable=SC2016
+    echo 'source $DOTFILES_REPO_DIR/etc/init.sh' >>$rc_file
 else
     unset _INIT_SH_LOADED
 fi
 
 if ! type z >/dev/null 2>&1; then
     echo '==install z...'
-    echo "source $DOTFILES_REPO_DIR/etc/z.sh" >>$rc_file
+    # shellcheck disable=SC2016
+    echo 'source $DOTFILES_REPO_DIR/etc/z.sh' >>$rc_file
 fi
 
 # end
