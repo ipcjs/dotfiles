@@ -31,7 +31,7 @@ else
     unset _INIT_SH_LOADED
 fi
 
-if type z >/dev/null 2>&1; then
+if ! type z >/dev/null 2>&1; then
     echo '==install z...'
     echo "source $DOTFILES_REPO_DIR/etc/z.sh" >>$rc_file
 fi
