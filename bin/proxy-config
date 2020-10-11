@@ -22,7 +22,7 @@ while test $# -gt 0; do
                 rc_file=~/.zshrc
             fi
             # shellcheck disable=SC2016
-            echo 'source $DOTFILES_REPO_DIR/bin/proxy-config --no-print' >>$rc_file
+            echo 'source $DOTFILES_REPO_DIR/bin/proxy-config'" --host=$host --port=$port --no-print" >>$rc_file
             return 2>/dev/null || exit 0
             ;;
         --port=*)
