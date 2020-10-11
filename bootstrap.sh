@@ -3,10 +3,10 @@ rc_file=~/.bashrc
 if [ -n "$ZSH_VERSION" ]; then
     rc_file=~/.zshrc
 fi
-CUR_DIR=$(readlink -f $(pwd))
-if [ -z "$_DOTFILES_REPO_DIR" ]; then
+CUR_DIR=$(pwd)
+if [ -z "$DOTFILES_REPO_DIR" ]; then
     echo '==clone dofiles repo...'
-    if [ -z $(which git) ]; then
+    if [ -z "$(which git)" ]; then
         sudo apt-get update
         sudo apt-get install -y git
     fi
@@ -16,23 +16,24 @@ if [ -z "$_DOTFILES_REPO_DIR" ]; then
     git config --global alias.lga "log --all --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
 
     git clone https://github.com/ipcjs/dotfiles.git
-    _DOTFILES_REPO_DIR=$(pwd)/dotfiles
+    DOTFILES_REPO_DIR=$(pwd)/dotfiles
+    echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
 else
     echo '==update dofiles repo...'
-    cd $_DOTFILES_REPO_DIR
+    cd $DOTFILES_REPO_DIR
     git pull
 fi
 
 if [ -z "$_INIT_SH_LOADED" ]; then
     echo '==install init.sh...'
-    echo "source $_DOTFILES_REPO_DIR/etc/init.sh" >>$rc_file
+    echo "source $DOTFILES_REPO_DIR/etc/init.sh" >>$rc_file
 else
     unset _INIT_SH_LOADED
 fi
 
-if [ -z $(type -t z) ]; then
+if [ -z "$(type -t z)" ]; then
     echo '==install z...'
-    echo "source $_DOTFILES_REPO_DIR/etc/z.sh" >>$rc_file
+    echo "source $DOTFILES_REPO_DIR/etc/z.sh" >>$rc_file
 fi
 
 # end
