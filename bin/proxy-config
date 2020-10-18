@@ -4,6 +4,19 @@
 # https://superuser.com/questions/186272/check-if-any-of-the-parameters-to-a-bash-script-match-a-string
 port="1080"
 host="127.0.0.1"
+no_proxy="localhost,\
+127.0.0.1,\
+dl.google.com,\
+maven.aliyun.com,\
+cdn.npm.taobao.org,\
+registry.npm.taobao.org,\
+storage.flutter-io.cn,\
+pub.flutter-io.cn,\
+services.gradle.org,\
+apple.com,\
+downloads.gradle-dn.com"
+no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
+
 print="true"
 while test $# -gt 0; do
     case "$1" in
@@ -23,6 +36,15 @@ while test $# -gt 0; do
             fi
             # shellcheck disable=SC2016
             echo 'source $DOTFILES_REPO_DIR/bin/proxy-config'" --host=$host --port=$port --no-print" >>$rc_file
+
+            gradle_config_file=~/.gradle/gradle.properties
+            echo >>"$gradle_config_file"
+            echo "systemProp.http.proxyHost=$host" >>"$gradle_config_file"
+            echo "systemProp.https.proxyHost=$host" >>"$gradle_config_file"
+            echo "systemProp.http.proxyPort=$port" >>"$gradle_config_file"
+            echo "systemProp.https.proxyPort=$port" >>"$gradle_config_file"
+            echo "systemProp.http.nonProxyHosts=$no_proxy_gradle" >>"$gradle_config_file"
+            echo "systemProp.https.nonProxyHosts=$no_proxy_gradle" >>"$gradle_config_file"
             return 2>/dev/null || exit 0
             ;;
         --port=*)
@@ -44,17 +66,7 @@ done
 
 export http_proxy="http://$host:$port"
 export https_proxy="http://$host:$port"
-export no_proxy="localhost,\
-127.0.0.1,\
-dl.google.com,\
-maven.aliyun.com,\
-cdn.npm.taobao.org,\
-registry.npm.taobao.org,\
-storage.flutter-io.cn,\
-pub.flutter-io.cn,\
-services.gradle.org,\
-apple.com,\
-downloads.gradle-dn.com"
+export no_proxy
 
 # adapt uppercase
 export HTTP_PROXY=$http_proxy
@@ -64,5 +76,5 @@ export NO_PROXY=$no_proxy
 if [ -n "$print" ]; then
     echo "proxy=$http_proxy"
     echo "no_proxy=$no_proxy"
-    echo "nonProxyHosts=$(echo $no_proxy | tr ',' '|')"
+    echo "nonProxyHosts=$no_proxy_gradle"
 fi
