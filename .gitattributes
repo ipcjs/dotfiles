@@ -1,0 +1,7 @@
+# https://github.com/alexkaratarakis/gitattributes/blob/master/Common.gitattributes
+*        text=auto eol=lf
+# Make sure that these Windows files always have CRLF line endings in checkout
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+*.ps1    text eol=crlf
+
