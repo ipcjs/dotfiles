@@ -24,9 +24,6 @@ while test $# -gt 0; do
             export http_proxy=""
             export https_proxy=""
             export no_proxy=""
-            # export HTTP_PROXY=""
-            # export HTTPS_PROXY=""
-            # export NO_PROXY=""
             return 2>/dev/null || echo 'please perform by source' && exit 1
             ;;
         install)
@@ -67,11 +64,6 @@ done
 export http_proxy="http://$host:$port"
 export https_proxy="http://$host:$port"
 export no_proxy
-
-# adapt uppercase
-# export HTTP_PROXY=$http_proxy
-# export HTTPS_PROXY=$https_proxy
-# export NO_PROXY=$no_proxy
 
 if [ -n "$print" ]; then
     echo "proxy=$http_proxy"
