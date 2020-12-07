@@ -55,6 +55,19 @@ while test $# -gt 0; do
             ;;
         *)
             echo "unknown arg: $1"
+            echo
+            echo 'temporarily set proxy'
+            echo '. proxy-config'
+            echo
+            echo 'temporarily clear proxy:'
+            echo '. proxy-config clear'
+            echo
+            echo 'install proxy to rc and gradle file:'
+            echo 'proxy-config install'
+            echo
+            echo '--port=1080, set port'
+            echo '--host=127.0.0.1, set host'
+            echo '--no-print, no print proxy url to console'
             return 1 2>/dev/null || exit 1
             ;;
     esac
