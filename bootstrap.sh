@@ -1,5 +1,5 @@
 #!/bin/bash
-rc_file=~/.bashrc
+rc_file=~/.bash_profile
 if [ -n "$ZSH_VERSION" ]; then
     rc_file=~/.zshrc
 fi
