@@ -27,7 +27,7 @@ while test $# -gt 0; do
             return 2>/dev/null || echo 'please perform by source' && exit 1
             ;;
         install)
-            rc_file=~/.bashrc
+            rc_file=~/.bash_profile
             if [ -n "$ZSH_VERSION" ]; then
                 rc_file=~/.zshrc
             fi
