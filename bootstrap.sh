@@ -1,7 +1,10 @@
 #!/bin/bash
-rc_file=~/.bash_profile
+rc_file=~/.bashrc
 if [ -n "$ZSH_VERSION" ]; then
     rc_file=~/.zshrc
+elif [ "$(uname -s)" == "Darwin" ]; then
+    # macOS+bash
+    rc_file=~/.bash_profile
 fi
 CUR_DIR=$(pwd)
 

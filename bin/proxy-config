@@ -27,9 +27,11 @@ while test $# -gt 0; do
             return 2>/dev/null || echo 'please perform by source' && exit 1
             ;;
         install)
-            rc_file=~/.bash_profile
+            rc_file=~/.bashrc
             if [ -n "$ZSH_VERSION" ]; then
                 rc_file=~/.zshrc
+            elif [ "$(uname -s)" == "Darwin" ]; then
+                rc_file=~/.bash_profile
             fi
             # shellcheck disable=SC2016
             echo 'source $DOTFILES_REPO_DIR/bin/proxy-config'" --host=$host --port=$port --no-print" >>$rc_file
