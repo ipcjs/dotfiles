@@ -38,5 +38,8 @@ fi
 export PATH
 
 alias cnpm='npm --registry=https://registry.npm.taobao.org'
+
 alias ll='ls -al'
+
 alias flx='flutter pub run'
+alias fl='flutter'
