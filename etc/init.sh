@@ -41,5 +41,5 @@ alias cnpm='npm --registry=https://registry.npm.taobao.org'
 
 alias ll='ls -al'
 
-alias flx='flutter pub run'
-alias fl='flutter'
+alias fp='flutter pub'
+alias fpx='flutter pub run'
