@@ -12,9 +12,8 @@ cdn.npm.taobao.org,\
 registry.npm.taobao.org,\
 storage.flutter-io.cn,\
 pub.flutter-io.cn,\
-services.gradle.org,\
-apple.com,\
-downloads.gradle-dn.com"
+upos-hz-mirrorakam.akamaized.net,\
+apple.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
 print="true"
