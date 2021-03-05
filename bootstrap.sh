@@ -26,7 +26,7 @@ if [ -n "$_DOTFILES_REPO_DIR" ]; then
 fi
 
 if [ -z "$DOTFILES_REPO_DIR" ]; then
-    echo '==clone dofiles repo...'
+    echo '==config...'
     if [ -z "$(which git)" ]; then
         sudo apt-get update
         sudo apt-get install -y git
@@ -36,8 +36,13 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
     git config --global alias.lga "log --all --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
 
-    git clone https://github.com/ipcjs/dotfiles.git
-    DOTFILES_REPO_DIR=$(pwd)/dotfiles
+    if [ "$(basename $(pwd))" = "dotfiles" ]; then
+        DOTFILES_REPO_DIR=$(pwd)
+    else
+        echo '==clone dofiles repo...'
+        git clone https://github.com/ipcjs/dotfiles.git
+        DOTFILES_REPO_DIR=$(pwd)/dotfiles
+    fi
     echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
 else
     echo '==update dofiles repo...'
