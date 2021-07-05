@@ -38,6 +38,7 @@ fi
 export PATH
 
 alias cnpm='npm --registry=https://registry.npm.taobao.org'
+alias cyarn='yarn --registry=https://registry.npm.taobao.org'
 
 alias l='ls -al'
 
