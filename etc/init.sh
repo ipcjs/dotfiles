@@ -47,3 +47,4 @@ export PUB_HOSTED_URL=https://pub.flutter-io.cn
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 alias fp='flutter pub'
 alias fpx='flutter pub run'
+alias fpget-from-org='PUB_HOSTED_URL=https://pub.dartlang.org flutter pub get'
