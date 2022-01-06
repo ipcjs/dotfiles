@@ -43,8 +43,11 @@ alias cyarn='yarn --registry=https://registry.npm.taobao.org'
 alias l='ls -al'
 
 # flutter
-export PUB_HOSTED_URL=https://pub.flutter-io.cn
+# export PUB_HOSTED_URL=https://pub.flutter-io.cn
+unset PUB_HOSTED_URL
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 alias fp='flutter pub'
 alias fpx='flutter pub run'
-alias fpget-from-org='PUB_HOSTED_URL=https://pub.dartlang.org flutter pub get'
+alias fpget='flutter pub get'
+alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
+alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
