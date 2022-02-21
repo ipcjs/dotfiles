@@ -7,24 +7,6 @@ elif [ "$(uname -s)" == "Darwin" ]; then
     rc_file=~/.bash_profile
 fi
 CUR_DIR=$(pwd)
-
-# shellcheck disable=SC2153
-if [ -n "$_DOTFILES_REPO_DIR" ]; then
-    echo '==update to new environment variable'
-    export DOTFILES_REPO_DIR=$_DOTFILES_REPO_DIR
-    unset _DOTFILES_REPO_DIR
-    {
-        echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR"
-        # shellcheck disable=SC2016
-        echo 'source $DOTFILES_REPO_DIR/etc/init.sh'
-        # shellcheck disable=SC2016
-        echo 'source $DOTFILES_REPO_DIR/etc/z.sh'
-    } >>$rc_file
-    echo 'delete old environment variable by yourself. Enter to continue...'
-    read -r
-    vi $rc_file
-fi
-
 if [ -z "$DOTFILES_REPO_DIR" ]; then
     echo '==config...'
     if [ -z "$(which git)" ]; then
