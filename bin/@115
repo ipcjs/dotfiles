@@ -1,2 +1,0 @@
-# /bin/bash
-https_proxy=192.168.30.115:1080 bash -c "$*"
