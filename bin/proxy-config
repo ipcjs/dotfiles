@@ -27,6 +27,13 @@ while test $# -gt 0; do
             return 2>/dev/null || echo 'please perform by source' && exit 1
             ;;
         install)
+            case "$-" in
+                *i*) ;;
+                *)
+                    echo 'please perform by source'
+                    exit 1
+                    ;;
+            esac
             rc_file=~/.bashrc
             if [ -n "$ZSH_VERSION" ]; then
                 rc_file=~/.zshrc
@@ -37,14 +44,18 @@ while test $# -gt 0; do
             echo 'source $DOTFILES_REPO_DIR/bin/proxy-config'" --host=$host --port=$port --no-print" >>$rc_file
 
             gradle_config_file=~/.gradle/gradle.properties
-            echo >>"$gradle_config_file"
-            echo "systemProp.http.proxyHost=$host" >>"$gradle_config_file"
-            echo "systemProp.https.proxyHost=$host" >>"$gradle_config_file"
-            echo "systemProp.http.proxyPort=$port" >>"$gradle_config_file"
-            echo "systemProp.https.proxyPort=$port" >>"$gradle_config_file"
-            echo "systemProp.http.nonProxyHosts=$no_proxy_gradle" >>"$gradle_config_file"
-            echo "systemProp.https.nonProxyHosts=$no_proxy_gradle" >>"$gradle_config_file"
-            return 2>/dev/null || exit 0
+            if [ -e $gradle_config_file ]; then
+                {
+                    echo
+                    echo "systemProp.http.proxyHost=$host"
+                    echo "systemProp.https.proxyHost=$host"
+                    echo "systemProp.http.proxyPort=$port"
+                    echo "systemProp.https.proxyPort=$port"
+                    echo "systemProp.http.nonProxyHosts=$no_proxy_gradle"
+                    echo "systemProp.https.nonProxyHosts=$no_proxy_gradle"
+                } >>"$gradle_config_file"
+            fi
+            return 2>/dev/null || exit 1
             ;;
         --port=*)
             port=${1:7}
@@ -65,7 +76,7 @@ while test $# -gt 0; do
             echo '. proxy-config clear'
             echo
             echo 'install proxy to rc and gradle file:'
-            echo 'proxy-config install'
+            echo '. proxy-config install'
             echo
             echo '--port=1080, set port'
             echo '--host=127.0.0.1, set host'
