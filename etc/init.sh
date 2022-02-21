@@ -40,7 +40,9 @@ export PATH
 alias cnpm='npm --registry=https://registry.npm.taobao.org'
 alias cyarn='yarn --registry=https://registry.npm.taobao.org'
 
-alias l='ls -al'
+if ! type l > /dev/null 2>&1; then
+    alias l='ls -al'
+fi
 
 # flutter
 # export PUB_HOSTED_URL=https://pub.flutter-io.cn
