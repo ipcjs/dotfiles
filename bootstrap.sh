@@ -38,6 +38,9 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
             echo
             echo 'source $ZSH/oh-my-zsh.sh'
         } >>$rc_file
+        echo 'delete old zsh variable by yourself. Enter to continue...'
+        read -r
+        vi $rc_file
     fi
 else
     echo '==update dofiles repo...'
