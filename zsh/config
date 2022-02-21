@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ZSH_THEME="git-bash"
+
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+DISABLE_AUTO_UPDATE="true"
+
+plugins=(git z tmux zsh-autosuggestions command-not-found flutter)
