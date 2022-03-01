@@ -15,6 +15,11 @@ pub.flutter-io.cn,\
 gitee.com,\
 engdownload.eassos.cn,\
 upos-hz-mirrorakam.akamaized.net,\
+www.bmtasmartbus.com,\
+mirrors.tuna.tsinghua.edu.cn,\
+amappc.oss-cn-zhangjiakou.aliyuncs.com,\
+lbsyun-baidu.cdn.bcebos.com,\
+a.amap.com,\
 apple.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
