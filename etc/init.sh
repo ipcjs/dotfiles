@@ -54,3 +54,9 @@ alias fpget='flutter pub get'
 alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
 alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
 alias cflutter+='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter+'
+
+function sc(){
+    target=$1
+    cmd=$2
+    sudo systemctl $cmd $target
+}
