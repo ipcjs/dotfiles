@@ -40,7 +40,7 @@ export PATH
 alias cnpm='npm --registry=https://registry.npm.taobao.org'
 alias cyarn='yarn --registry=https://registry.npm.taobao.org'
 
-if ! type l > /dev/null 2>&1; then
+if ! type l >/dev/null 2>&1; then
     alias l='ls -al'
 fi
 
@@ -55,8 +55,12 @@ alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
 alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
 alias cflutter+='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter+'
 
-function sc(){
+function sc() {
     target=$1
     cmd=$2
     sudo systemctl $cmd $target
+}
+
+function is-wsl-2() {
+    uname -r | grep WSL2 >/dev/null 2>&1
 }
