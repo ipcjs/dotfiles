@@ -11,13 +11,6 @@ alias studio='cmd.exe /c studio'
 alias idea='cmd.exe /c idea'
 alias wsl='wsl.exe'
 
-## code/code-exe/code-sh
-if ! type code-sh >/dev/null 2>&1; then
-  # shellcheck disable=SC2139
-  alias code-sh="\"$(which code)\""
-fi
-
-# alias code-exe='cmd.exe /c code'
 function code-exe() {
   cmd.exe /c code "$(wslpath -wa "$1")"
 }
@@ -25,7 +18,8 @@ function code() {
   if __beginswith /mnt/ "$(realpath "$1")"; then
     code-exe "$@"
   else
-    code-sh "$@"
+    code_sh=$(bash -c 'type -p code')
+    "$code_sh" "$@"
   fi
 }
 
