@@ -1,0 +1,4 @@
+#!/bin/sh
+logd() {
+    echo "$(date +%H:%M:%S.%N) $*"
+}

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function __beginswith() { case $2 in "$1"*) true ;; *) false ;; esac }
+
+# alias git=git.exe
+alias adb=adb.exe
+alias ipconfig=ipconfig.exe
+alias flutter='cmd.exe /c flutter'
+# alias studio='/mnt/c/SDK/android-sudio-beta/bin/studio64.exe'
+alias studio='cmd.exe /c studio'
+alias idea='cmd.exe /c idea'
+alias wsl='wsl.exe'
+
+## code/code-exe/code-sh
+if ! type code-sh >/dev/null 2>&1; then
+  # shellcheck disable=SC2139
+  alias code-sh="\"$(which code)\""
+fi
+
+# alias code-exe='cmd.exe /c code'
+function code-exe() {
+  cmd.exe /c code "$(wslpath -wa "$1")"
+}
+function code() {
+  if __beginswith /mnt/ "$(realpath "$1")"; then
+    code-exe "$@"
+  else
+    code-sh "$@"
+  fi
+}
+
+function git() {
+  if __beginswith /mnt/ "$(pwd)"; then
+    git.exe "$@"
+  else
+    /usr/bin/git "$@"
+  fi
+}
+
+function __git_prompt_git() {
+  GIT_OPTIONAL_LOCKS=0 git "$@"
+}
