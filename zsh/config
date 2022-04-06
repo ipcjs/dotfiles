@@ -8,11 +8,6 @@ DISABLE_AUTO_UPDATE="true"
 
 plugins=(git z zsh-autosuggestions command-not-found)
 
-if type flutter > /dev/null 2>&1; then
-    plugins+=(flutter)
-fi
-
 if type tmux > /dev/null 2>&1; then
     plugins+=(tmux)
 fi
-
