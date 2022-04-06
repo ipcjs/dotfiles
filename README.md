@@ -13,6 +13,14 @@ source <(curl https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.
 git pull & source bootstrap.sh
 ```
 
+## Scoop
+
+当前仓库同时也是一个Scoop的bucket, 执行如下命令, 安装它:
+
+```powershell
+scoop bucket add ipcjs https://github.com/ipcjs/dotfiles.git
+```
+
 ## 参考
 
 1. [提高效率从编写 init.sh 开始 - 知乎](https://zhuanlan.zhihu.com/p/50080614)
