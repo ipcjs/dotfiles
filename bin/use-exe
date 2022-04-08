@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# use `SKIP_USE_EXE=Y zsh` to skip use_exe.
+if [ -n "$SKIP_USE_EXE" ]; then
+  echo "skip use_exe."
+  return
+fi
+
 function __beginswith() { case $2 in "$1"*) true ;; *) false ;; esac }
 
 # alias git=git.exe
