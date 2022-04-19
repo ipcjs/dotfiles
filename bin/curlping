@@ -1,0 +1,17 @@
+#!/bin/bash
+CURL=curl
+if [ -e '/mingw64/bin/curl' ];then
+    CURL='/mingw64/bin/curl'
+fi
+
+echo -e "$CURL $*\n"
+while true
+do
+    # shellcheck disable=SC2068,SC2145
+    $CURL $@\
+        -m 3\
+        --no-progress-meter\
+        -o /dev/null\
+        -w '%{remote_ip}:%{remote_port} (%{size_download} bytes), d=%{speed_download}ms time=%{time_total}s\n'
+    sleep 1s
+done
