@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # use `SKIP_USE_EXE=Y zsh` to skip use_exe.
 if [ -n "$SKIP_USE_EXE" ]; then
@@ -6,7 +6,23 @@ if [ -n "$SKIP_USE_EXE" ]; then
   return
 fi
 
-function __beginswith() { case $2 in "$1"*) true ;; *) false ;; esac }
+__beginswith() { case $2 in "$1"*) true ;; *) false ;; esac }
+__endswith() { case $2 in *"$1") true ;; *) false ;; esac }
+
+__exe_or_bin_by_pwd() {
+  _exe=$1
+  _bin=$2
+  shift 2
+  if __beginswith /mnt/ "$(pwd)"; then
+    if __endswith .exe "$_exe"; then
+      "$_exe" "$@"
+    else
+      cmd.exe /c "$_exe" "$@"
+    fi
+  else
+    "$_bin" "$@"
+  fi
+}
 
 # alias git=git.exe
 alias adb=adb.exe
@@ -18,34 +34,21 @@ alias studio='cmd.exe /c studio'
 alias idea='cmd.exe /c idea'
 alias wsl='wsl.exe'
 
-function code-exe() {
-  cmd.exe /c code "$(wslpath -wa "$1")"
-}
-function code() {
+code() {
   if __beginswith /mnt/ "$(realpath "$1")"; then
-    code-exe "$@"
+    cmd.exe /c code "$(wslpath -wa "$1")"
   else
     code_sh=$(bash -c 'type -p code')
     "$code_sh" "$@"
   fi
 }
 
-function git() {
-  if __beginswith /mnt/ "$(pwd)"; then
-    git.exe "$@"
-  else
-    /usr/bin/git "$@"
-  fi
-}
+git() { __exe_or_bin_by_pwd 'git.exe' '/usr/bin/git' "$@"; }
 
-function npm() {
-  if __beginswith /mnt/ "$(pwd)"; then
-    cmd.exe /c npm "$@"
-  else
-    /usr/bin/npm "$@"
-  fi
-}
+npm() { __exe_or_bin_by_pwd 'npm' '/usr/bin/npm' "$@"; }
 
-function __git_prompt_git() {
+npx() { __exe_or_bin_by_pwd 'npx' '/usr/bin/npx' "$@"; }
+
+__git_prompt_git() {
   GIT_OPTIONAL_LOCKS=0 git "$@"
 }
