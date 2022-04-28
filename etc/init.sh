@@ -39,6 +39,7 @@ export PATH
 
 alias cnpm='npm --registry=https://registry.npm.taobao.org'
 alias cyarn='yarn --registry=https://registry.npm.taobao.org'
+alias cpnpm='pnpm --registry=https://registry.npm.taobao.org'
 
 if ! type l >/dev/null 2>&1; then
     alias l='ls -al'
