@@ -22,6 +22,7 @@ mirrors.tuna.tsinghua.edu.cn,\
 amappc.oss-cn-zhangjiakou.aliyuncs.com,\
 lbsyun-baidu.cdn.bcebos.com,\
 a.amap.com,\
+cdn.ipcjs.top,\
 apple.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
