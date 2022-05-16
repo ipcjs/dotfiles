@@ -33,6 +33,7 @@ alias dart='cmd.exe /c dart'
 alias studio='cmd.exe /c studio'
 alias idea='cmd.exe /c idea'
 alias wsl='wsl.exe'
+alias winget='winget.exe'
 
 code() {
   if __beginswith /mnt/ "$(realpath "$1")"; then
