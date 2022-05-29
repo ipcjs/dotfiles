@@ -34,6 +34,7 @@ alias studio='cmd.exe /c studio'
 alias idea='cmd.exe /c idea'
 alias wsl='wsl.exe'
 alias winget='winget.exe'
+alias @='cmd.exe /c'
 
 code() {
   if __beginswith /mnt/ "$(realpath "$1")"; then
