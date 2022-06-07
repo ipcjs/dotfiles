@@ -24,6 +24,7 @@ amappc.oss-cn-zhangjiakou.aliyuncs.com,\
 lbsyun-baidu.cdn.bcebos.com,\
 a.amap.com,\
 cdn.ipcjs.top,\
+baidu.com,\
 apple.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
