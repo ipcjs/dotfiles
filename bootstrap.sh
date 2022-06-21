@@ -8,6 +8,21 @@ elif [ "$(uname -s)" == "Darwin" ]; then
 fi
 CUR_DIR=$(pwd)
 
+_config_omz() {
+    echo '==config zsh...'
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    cp "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/
+    # shellcheck disable=SC2016
+    {
+        echo 'source $DOTFILES_REPO_DIR/zsh/config'
+        echo
+        echo 'source $ZSH/oh-my-zsh.sh'
+    } >>$rc_file
+    echo 'delete old zsh variable by yourself. Enter to continue...'
+    read -r
+    vi $rc_file
+}
+
 if [ -z "$DOTFILES_REPO_DIR" ]; then
     echo '==config...'
     if [ -z "$(which git)" ]; then
@@ -27,20 +42,18 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
         DOTFILES_REPO_DIR=$(pwd)/dotfiles
     fi
     echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
-
+    # use ZSH
     if [ -n "$ZSH_VERSION" ]; then
-        echo '==config zsh...'
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        cp "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/
-        # shellcheck disable=SC2016
-        {
-            echo 'source $DOTFILES_REPO_DIR/zsh/config'
-            echo
-            echo 'source $ZSH/oh-my-zsh.sh'
-        } >>$rc_file
-        echo 'delete old zsh variable by yourself. Enter to continue...'
-        read -r
-        vi $rc_file
+        if [ -z "$ZSH" ]; then
+            echo 'Do you want to install oh-my-zsh? [y/n]'
+            if read -q; then
+                echo '==install oh-my-zsh...'
+                sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+                _config_omz
+            fi
+        else
+            _config_omz
+        fi
     fi
 else
     echo '==update dofiles repo...'
