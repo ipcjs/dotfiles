@@ -13,5 +13,5 @@ do
         --no-progress-meter\
         -o /dev/null\
         -w '%{remote_ip}:%{remote_port} (%{size_download} bytes), d=%{speed_download}ms time=%{time_total}s\n'
-    sleep 1s
+    sleep 1
 done
