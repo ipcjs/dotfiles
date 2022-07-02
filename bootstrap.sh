@@ -8,8 +8,23 @@ elif [ "$(uname -s)" == "Darwin" ]; then
 fi
 CUR_DIR=$(pwd)
 
+_install=""
+while test $# -gt 0; do
+    case "$1" in
+        -f)
+            _install="true"
+            ;;
+        *)
+            echo "unknown arg: $1"
+            echo "usage: $0 [-f]"
+            echo "  -f: force install"
+            exit 1
+            ;;
+    esac
+done
+
 if [ -z "$DOTFILES_REPO_DIR" ]; then
-    echo '==config...'
+    echo '==clone dotfiles repo...'
     if [ -z "$(which git)" ]; then
         sudo apt-get update
         sudo apt-get install -y git
@@ -19,14 +34,22 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
     git config --global alias.lga "log --all --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
 
-    if [ "$(basename $(pwd))" = "dotfiles" ]; then
+    if [ "$(basename "$(pwd)")" = "dotfiles" ]; then
         DOTFILES_REPO_DIR=$(pwd)
     else
         echo '==clone dofiles repo...'
         git clone --recursive https://github.com/ipcjs/dotfiles.git
         DOTFILES_REPO_DIR=$(pwd)/dotfiles
     fi
+    _install="true"
+else
+    echo '==update dofiles repo...'
+    cd "$DOTFILES_REPO_DIR" || exit 1
+    git pull && git submodule update --init --recursive
+fi
 
+if [ -n "$_install" ]; then
+    echo '==config...'
     if [ -n "$ZSH_VERSION" ]; then
         echo '==config zsh...'
         if [ -z "$ZSH" ]; then
@@ -50,10 +73,6 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     else
         echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
     fi
-else
-    echo '==update dofiles repo...'
-    cd "$DOTFILES_REPO_DIR" || exit 1
-    git pull && git submodule update --init --recursive
 fi
 
 if [ -z "$_INIT_SH_LOADED" ]; then
@@ -71,6 +90,7 @@ if ! type z >/dev/null 2>&1 && [ -z "$ZSH_VERSION" ]; then
 fi
 
 # end
-cd $CUR_DIR
+cd "$CUR_DIR" || exit 1
 unset CUR_DIR
-source $rc_file
+# shellcheck disable=SC1090 
+source "$rc_file"
