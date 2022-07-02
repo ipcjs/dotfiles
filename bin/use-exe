@@ -83,6 +83,7 @@ command_not_found_handler() {
   # process cmd
   elif which "$cmd.cmd" >/dev/null; then
     cmd.exe /c "$cmd.cmd" "${args[@]}"
+    return $?
   # process bat/command in cmd, eg: start, mklink
   # please replace 帮助工具不支持此命令 to your language.
   elif cmd.exe /c "(where $cmd || (help $cmd | findstr /V 帮助工具不支持此命令)) >nul 2>nul"; then
