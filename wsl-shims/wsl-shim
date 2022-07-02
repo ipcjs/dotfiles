@@ -4,9 +4,15 @@ name="$0"
 [[ "$name" == */* ]] || name="./$name"
 name="${name##*/}"
 
-if [ "$name" == "wslshim" ] ; then
-    ln -s wslshim $1
-    exit 0
+if [ "$name" == "wsl-shim" ] ; then
+    if [ -n "$1" ]; then
+        echo "link $1 to wsl-shim"
+        ln -s "$0" "$1"
+        exit 0
+    else
+        echo "usage: $0 <link-name>"
+        exit 1
+    fi
 fi
 
 (which $name.exe > /dev/null && $name.exe "$@") \
