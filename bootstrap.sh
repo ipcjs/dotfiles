@@ -11,16 +11,17 @@ CUR_DIR=$(pwd)
 _install=""
 while test $# -gt 0; do
     case "$1" in
-        -f)
+        install)
             _install="true"
             ;;
         *)
             echo "unknown arg: $1"
-            echo "usage: $0 [-f]"
-            echo "  -f: force install"
+            echo "usage: $0 [install]"
+            echo "  install: force install"
             exit 1
             ;;
     esac
+    shift
 done
 
 if [ -z "$DOTFILES_REPO_DIR" ]; then
@@ -45,7 +46,7 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
 else
     echo '==update dofiles repo...'
     cd "$DOTFILES_REPO_DIR" || exit 1
-    git pull && git submodule update --init --recursive
+    git pull && git submodule update --init --recursive || return 1 2>/dev/null || exit 1
 fi
 
 if [ -n "$_install" ]; then
@@ -55,6 +56,9 @@ if [ -n "$_install" ]; then
         if [ -z "$ZSH" ]; then
             echo '==install oh-my-zsh...'
             sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+            if [ ! -d "$HOME/.oh-my-zsh" ]; then
+                echo "==install failed..." && return 1 2>/dev/null || exit 1
+            fi
         fi
         # ensure omz is installed, then update .zshrc
         echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
@@ -92,5 +96,5 @@ fi
 # end
 cd "$CUR_DIR" || exit 1
 unset CUR_DIR
-# shellcheck disable=SC1090 
+# shellcheck disable=SC1090
 source "$rc_file"
