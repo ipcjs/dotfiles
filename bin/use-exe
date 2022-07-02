@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # use `SKIP_USE_EXE=Y zsh` to skip use_exe.
 if [ -n "$SKIP_USE_EXE" ]; then
@@ -46,6 +46,11 @@ code() {
   fi
 }
 
+# like open of macOS
+open() {
+  cmd.exe /c start "$@"
+}
+
 git() { __exe_or_bin_by_pwd 'git.exe' '/usr/bin/git' "$@"; }
 npm() { __exe_or_bin_by_pwd 'npm' '/usr/bin/npm' "$@"; }
 npx() { __exe_or_bin_by_pwd 'npx' '/usr/bin/npx' "$@"; }
@@ -56,4 +61,35 @@ mono_repo() { __exe_or_bin_by_pwd 'mono_repo' 'mono_repo' "$@"; }
 
 __git_prompt_git() {
   GIT_OPTIONAL_LOCKS=0 git "$@"
+}
+
+# fallback to xxx.exe if xxx is not found.
+# https://github.com/microsoft/WSL/issues/2003
+eval "$(
+  echo "orig_command_not_found_handler(){"
+  declare -f command_not_found_handler | tail -n +2
+)"
+command_not_found_handler() {
+  # echo ">>$*"
+  local cmd=$1
+  local cmd_args=("$@")
+  shift
+  local args=("$@")
+
+  # process exe
+  if which "$cmd.exe" >/dev/null; then
+    "$cmd.exe" "${args[@]}"
+    return $?
+  # process cmd
+  elif which "$cmd.cmd" >/dev/null; then
+    cmd.exe /c "$cmd.cmd" "${args[@]}"
+  # process bat/command in cmd, eg: start, mklink
+  # please replace 帮助工具不支持此命令 to your language.
+  elif cmd.exe /c "(where $cmd || (help $cmd | findstr /V 帮助工具不支持此命令)) >nul 2>nul"; then
+    cmd.exe /c "${cmd_args[*]}"
+    return $?
+  fi
+
+  orig_command_not_found_handler "$cmd" "${args[@]}"
+  return $?
 }
