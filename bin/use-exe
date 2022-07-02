@@ -5,6 +5,7 @@ if [ -n "$SKIP_USE_EXE" ]; then
   echo "skip use_exe."
   return
 fi
+export PATH="$DOTFILES_REPO_DIR/wsl-shims:$PATH"
 
 __beginswith() { case $2 in "$1"*) true ;; *) false ;; esac }
 __endswith() { case $2 in *"$1") true ;; *) false ;; esac }
