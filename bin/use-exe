@@ -28,7 +28,7 @@ __exe_or_bin_by_pwd() {
 # alias git=git.exe
 alias adb=adb.exe
 alias ipconfig=ipconfig.exe
-alias flutter='cmd.exe /c flutter'
+# alias flutter='cmd.exe /c flutter'
 alias dart='cmd.exe /c dart'
 # alias studio='/mnt/c/SDK/android-sudio-beta/bin/studio64.exe'
 alias studio='cmd.exe /c studio'
@@ -44,6 +44,11 @@ code() {
     code_sh=$(bash -c 'type -p code')
     "$code_sh" "$@"
   fi
+}
+
+flutter() {
+  flutter_bin="$(wslpath -wa "$(/bin/which flutter)")"
+  cmd.exe /c "$flutter_bin" "$@"
 }
 
 # like open of macOS
