@@ -64,7 +64,7 @@ if [ -n "$_install" ]; then
         echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
 
         git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        cp "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/
+        ln -s "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/git-bash.zsh-theme
         # shellcheck disable=SC2016
         {
             echo 'source $DOTFILES_REPO_DIR/zsh/config'
