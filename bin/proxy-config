@@ -27,6 +27,7 @@ a.amap.com,\
 cdn.ipcjs.top,\
 baidu.com,\
 mirrors.aliyun.com,\
+download.pytorch.org,\
 apple.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
