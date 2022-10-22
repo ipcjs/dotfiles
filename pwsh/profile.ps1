@@ -1,8 +1,3 @@
-
-if ($env:SSH_CLIENT) {
-    return
-}
-
 # Load starship
 Invoke-Expression (&starship init powershell)
 
