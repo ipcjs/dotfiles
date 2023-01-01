@@ -12,5 +12,9 @@ Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 
+Set-PSReadLineOption -Colors @{
+    InlinePrediction = "#888888"
+}
+
 New-Alias open ii
 New-Alias l ls
