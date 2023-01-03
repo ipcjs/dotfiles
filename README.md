@@ -3,6 +3,7 @@
 ## Install
 
 ```sh
+# 推荐使用zsh执行命令
 source <(curl https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.sh)
 ```
 

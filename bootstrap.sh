@@ -8,6 +8,10 @@ elif [ "$(uname -s)" == "Darwin" ]; then
 fi
 CUR_DIR=$(pwd)
 
+if [ -z "${ZSH_VERSION}" ]; then
+    echo "WARNING: using $SHELL($rc_file), zsh is recommended shell."
+fi
+
 _install=""
 while test $# -gt 0; do
     case "$1" in
