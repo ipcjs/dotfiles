@@ -1,13 +1,15 @@
 # ipcjs's dotfiles
 
-## Install
+## Zsh/Bash
+
+### Install
 
 ```sh
 # 推荐使用zsh执行命令
 source <(curl https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.sh)
 ```
 
-## Update
+### Update
 
 ```sh
 # 由于要检测各种变量是否存在, 故需要用source, 在当前环境中执行
@@ -21,6 +23,10 @@ git pull & source bootstrap.sh
 ```powershell
 scoop bucket add ipcjs https://github.com/ipcjs/dotfiles.git
 ```
+
+## PowerShell
+
+[profile.ps1](pwsh/profile.ps1)是PowerShell的配置文件, 目前没写自动配置脚本, 需要手动配置: [PowerShell配置](https://www.evernote.com/l/AJSPPklXStNG6ZYG9jKKAbZffYUBsgdvT88/)
 
 ## 参考
 
