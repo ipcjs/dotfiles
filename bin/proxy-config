@@ -108,5 +108,9 @@ export no_proxy
 if [ -n "$print" ]; then
     echo "proxy=$http_proxy"
     echo "no_proxy=$no_proxy"
+    echo
     echo "nonProxyHosts=$no_proxy_gradle"
+    # https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html
+    echo
+    echo "-Dhttp.proxyHost=$host -Dhttps.proxyHost=$host -Dhttp.proxyPort=$port -Dhttps.proxyPort=$port -Dhttp.nonProxyHosts='$no_proxy_gradle' -Dhttps.nonProxyHosts='$no_proxy_gradle'"
 fi
