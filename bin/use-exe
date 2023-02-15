@@ -38,12 +38,19 @@ alias winget='winget.exe'
 alias @='cmd.exe /c'
 
 code() {
+  if [ "$1" = "-" ] && __beginswith /mnt/ "$(pwd)"; then
+    _tmp_txt="$(mktemp)"
+    echo "Reading from stdin via: $_tmp_txt"
+    cat /dev/stdin > "$_tmp_txt"
+    cmd.exe /c code "$(wslpath -wa "$_tmp_txt")"
+    return
+  fi
   if __beginswith /mnt/ "$(realpath "$1")"; then
     cmd.exe /c code "$(wslpath -wa "$1")"
-  else
-    code_sh=$(bash -c 'type -p code')
-    "$code_sh" "$@"
+    return
   fi
+  code_sh=$(bash -c 'type -p code')
+  "$code_sh" "$@"
 }
 
 flutter() {
