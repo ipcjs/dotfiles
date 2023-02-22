@@ -65,3 +65,10 @@ function sc() {
 function is-wsl-2() {
     uname -r | grep WSL2 >/dev/null 2>&1
 }
+
+function dofiles_update() {
+    git pull --rebase || return 1
+    git submodule update --init || return 1
+
+    source "$DOTFILES_REPO_DIR/bootstrap.sh"
+}

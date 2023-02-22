@@ -12,8 +12,7 @@ source <(curl https://raw.githubusercontent.com/ipcjs/dotfiles/master/bootstrap.
 ### Update
 
 ```sh
-# 由于要检测各种变量是否存在, 故需要用source, 在当前环境中执行
-git pull & source bootstrap.sh
+dotfiles_update
 ```
 
 ### WSL1
