@@ -52,10 +52,6 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
         DOTFILES_REPO_DIR=$(pwd)/dotfiles
     fi
     _install="true"
-else
-    echo '==update dofiles repo...'
-    cd "$DOTFILES_REPO_DIR" || exit 1
-    git pull --rebase && git submodule update --init --recursive || return 1 2>/dev/null || exit 1
 fi
 
 if [ -n "$_install" ]; then
