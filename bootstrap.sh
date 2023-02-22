@@ -30,7 +30,12 @@ done
 
 if [ -z "$DOTFILES_REPO_DIR" ]; then
     echo '==clone dotfiles repo...'
-    if [ -z "$(which git)" ]; then
+    if ! command -v git &>/dev/null; then
+        echo "install git..."
+        if ! command -v apt-get &>/dev/null; then
+            echo "apt-get does not exist, please install git manually"
+            exit 1
+        fi
         sudo apt-get update
         sudo apt-get install -y git
     fi
@@ -67,8 +72,8 @@ if [ -n "$_install" ]; then
         # ensure omz is installed, then update .zshrc
         echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
 
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        ln -s "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/git-bash.zsh-theme
+        # git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        # ln -s "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/git-bash.zsh-theme
         # shellcheck disable=SC2016
         {
             echo 'source $DOTFILES_REPO_DIR/zsh/config'
@@ -91,10 +96,18 @@ else
     unset _INIT_SH_LOADED
 fi
 
-if ! type z >/dev/null 2>&1 && [ -z "$ZSH_VERSION" ]; then
-    echo '==install z...'
-    # shellcheck disable=SC2016
-    echo 'source $DOTFILES_REPO_DIR/etc/z.sh' >>$rc_file
+# setup bash plugins
+if [ -z "${ZSH_VERSION}" ]; then
+    if ! command -v z; then
+        echo '==install z...'
+        # shellcheck disable=SC2016
+        echo 'source $DOTFILES_REPO_DIR/etc/z.sh' >>$rc_file
+    fi
+    if ! command -v __github_flow_branch_complete; then
+        echo '==install github-flow.plugin...'
+        # shellcheck disable=SC2016
+        echo 'source $DOTFILES_REPO_DIR/zsh/custom/plugins/github-flow/github-flow.plugin.zsh' >>$rc_file
+    fi
 fi
 
 # end

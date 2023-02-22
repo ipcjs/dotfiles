@@ -1,0 +1,72 @@
+#!/bin/bash
+TYPE_ARRAY=(pr hotfix feature chore docs style build ci refactor perf test)
+REMOTE=origin
+
+print_help() {
+    bin_name=$(basename "$0")
+    echo "GitHub风格的开发流程, 创建/切换/更新开发分支"
+    echo
+    echo "Usage: $bin_name <branch_name>"
+    echo
+    echo "## 实例"
+    echo
+    echo "清理本地分支:"
+    echo "$bin_name clean"
+    echo
+    echo "创建/切换到hotfix/bug1分支:"
+    echo "$bin_name hotfix/bug1"
+}
+
+fn_checkout() {
+    local branch_name=$1
+    git fetch --prune
+    if git checkout "$branch_name" 2> /dev/null; then
+        git pull --rebase
+    else
+        git checkout -b "$branch_name" --no-track "$default_remote_branch" && git push $REMOTE "$branch_name:$branch_name" -u
+    fi
+}
+
+fn_clean() {
+    fn_checkout "$main_branch"
+    git branch --merged | grep -v '\*' | xargs git branch -d
+    # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
+}
+
+default_remote_branch=$(git rev-parse --abbrev-ref "$REMOTE/HEAD")
+if ! [[ "${default_remote_branch}" =~ ^"$REMOTE"/(main|master)$ ]]; then
+    echo "远端默认分支不为main/master, 更新中..."
+    git remote set-head $REMOTE -a
+    default_remote_branch=$(git rev-parse --abbrev-ref "$REMOTE/HEAD")
+fi
+main_branch=${default_remote_branch#*/}
+
+case "$1" in
+    clean)
+        fn_clean
+        ;;
+    "$main_branch")
+        fn_checkout "$main_branch"
+        ;;
+    feat/*)
+        fn_checkout "feature/${1#*/}"
+        ;;
+    fix/*)
+        fn_checkout "hotfix/${1#*/}"
+        ;;
+    */*)
+        branch_prefix="${1%%/*}"
+        # shellcheck disable=SC2076
+        if [[ " ${TYPE_ARRAY[*]} " =~ " $branch_prefix " ]]; then
+            fn_checkout "$1"
+        else
+            echo "分支前缀必须是如下名字之一: ${TYPE_ARRAY[*]}"
+        fi
+        ;;
+    '' | -h | --help)
+        print_help
+        ;;
+    *)
+        fn_checkout "${TYPE_ARRAY[0]}/$1"
+        ;;
+esac

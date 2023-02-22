@@ -1,3 +1,4 @@
+#!/bin/zsh
 # vi $ZSH_CUSTOM/themes/git-bash.zsh-theme
 case "$(arch)" in
     arm64 | x86_64)

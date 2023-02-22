@@ -1,13 +1,21 @@
 #!/bin/bash
 
+ZSH_CUSTOM=$DOTFILES_REPO_DIR/zsh/custom
+
 ZSH_THEME="git-bash"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 DISABLE_AUTO_UPDATE="true"
 
-plugins=(git z zsh-autosuggestions command-not-found)
+plugins=(
+    git
+    github-flow
+    z
+    zsh-autosuggestions
+    command-not-found
+)
 
-if type tmux > /dev/null 2>&1; then
+if type tmux >/dev/null 2>&1; then
     plugins+=(tmux)
 fi
