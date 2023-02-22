@@ -66,7 +66,7 @@ function is-wsl-2() {
     uname -r | grep WSL2 >/dev/null 2>&1
 }
 
-function dofiles_update() {
+function dotfiles_update() {
     git pull --rebase && git submodule update --init --recursive || return 1
 
     source "$DOTFILES_REPO_DIR/bootstrap.sh"
