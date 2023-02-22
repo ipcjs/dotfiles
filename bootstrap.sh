@@ -96,8 +96,8 @@ else
     unset _INIT_SH_LOADED
 fi
 
-# setup bash plugins
 if [ -z "${ZSH_VERSION}" ]; then
+    # setup bash plugins
     if ! command -v z; then
         echo '==install z...'
         # shellcheck disable=SC2016
@@ -107,6 +107,12 @@ if [ -z "${ZSH_VERSION}" ]; then
         echo '==install github-flow.plugin...'
         # shellcheck disable=SC2016
         echo 'source $DOTFILES_REPO_DIR/zsh/custom/plugins/github-flow/github-flow.plugin.zsh' >>$rc_file
+    fi
+else
+    # setup zsh
+    if [ -d "$ZSH/custom/plugins/zsh-autosuggestions" ]; then
+        echo '==migrate zsh-autosuggestions'
+        rm -rf "$ZSH/custom/plugins/zsh-autosuggestions"
     fi
 fi
 
