@@ -67,6 +67,7 @@ function is-wsl-2() {
 }
 
 function dotfiles_update() {
+    cd "$DOTFILES_REPO_DIR" || return 1
     git pull --rebase && git submodule update --init --recursive || return 1
 
     source "$DOTFILES_REPO_DIR/bootstrap.sh"
