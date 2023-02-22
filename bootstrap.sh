@@ -55,7 +55,7 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
 else
     echo '==update dofiles repo...'
     cd "$DOTFILES_REPO_DIR" || exit 1
-    git pull && git submodule update --init --recursive || return 1 2>/dev/null || exit 1
+    git pull --rebase && git submodule update --init --recursive || return 1 2>/dev/null || exit 1
 fi
 
 if [ -n "$_install" ]; then
