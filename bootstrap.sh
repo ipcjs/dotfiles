@@ -99,10 +99,10 @@ if [ -z "${ZSH_VERSION}" ]; then
         # shellcheck disable=SC2016
         echo 'source $DOTFILES_REPO_DIR/etc/z.sh' >>$rc_file
     fi
-    if ! command -v __github_flow_branch_complete; then
-        echo '==install github-flow.plugin...'
+    if ! command -v __gflow_branch_complete; then
+        echo '==install gflow.plugin...'
         # shellcheck disable=SC2016
-        echo 'source $DOTFILES_REPO_DIR/zsh/custom/plugins/github-flow/github-flow.plugin.zsh' >>$rc_file
+        echo 'source $DOTFILES_REPO_DIR/zsh/custom/plugins/gflow/gflow.plugin.zsh' >>$rc_file
     fi
 else
     # setup zsh

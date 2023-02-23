@@ -10,7 +10,7 @@ DISABLE_AUTO_UPDATE="true"
 
 plugins=(
     git
-    github-flow
+    gflow
     z
     zsh-autosuggestions
     command-not-found
