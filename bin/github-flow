@@ -20,7 +20,7 @@ print_help() {
 fn_checkout() {
     local branch_name=$1
     git fetch --prune
-    if git checkout "$branch_name" 2> /dev/null; then
+    if git checkout "$branch_name" 2>/dev/null; then
         git pull --rebase
     else
         git checkout -b "$branch_name" --no-track "$default_remote_branch" && git push $REMOTE "$branch_name:$branch_name" -u
@@ -33,7 +33,7 @@ fn_clean() {
     # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
 }
 
-default_remote_branch=$(git rev-parse --abbrev-ref "$REMOTE/HEAD")
+default_remote_branch=$(git rev-parse --abbrev-ref "$REMOTE/HEAD") || exit 1
 if ! [[ "${default_remote_branch}" =~ ^"$REMOTE"/(main|master)$ ]]; then
     echo "远端默认分支不为main/master, 更新中..."
     git remote set-head $REMOTE -a
