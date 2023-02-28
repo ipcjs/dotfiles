@@ -66,6 +66,7 @@ open() {
 git() { __exe_or_bin_by_pwd 'git.exe' '/usr/bin/git' "$@"; }
 npm() { __exe_or_bin_by_pwd 'npm' '/usr/bin/npm' "$@"; }
 npx() { __exe_or_bin_by_pwd 'npx' '/usr/bin/npx' "$@"; }
+yarn() { __exe_or_bin_by_pwd 'yarn' '/usr/bin/yarn' "$@"; }
 pnpm() { __exe_or_bin_by_pwd 'pnpm' '/usr/bin/pnpm' "$@"; }
 node() { __exe_or_bin_by_pwd 'node.exe' '/usr/bin/node' "$@"; }
 nvm() { __exe_or_bin_by_pwd 'nvm.exe' '/usr/bin/nvm' "$@"; }
