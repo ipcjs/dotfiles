@@ -2,6 +2,15 @@
 TYPE_ARRAY=(pr hotfix feature chore docs style build ci refactor perf test)
 REMOTE=origin
 
+if test -z "$SKIP_USE_EXE" && command -v git.exe &>/dev/null && [[ "$(pwd)" == /mnt/* ]]; then
+    echo 'use git.exe'
+    # shellcheck disable=SC2032
+    git() {
+        git.exe "$@"
+    }
+    export -f git
+fi
+
 print_help() {
     bin_name=$(basename "$0")
     echo "GitHub风格的开发流程, 创建/切换/更新开发分支"
