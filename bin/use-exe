@@ -70,6 +70,7 @@ yarn() { __exe_or_bin_by_pwd 'yarn' '/usr/bin/yarn' "$@"; }
 pnpm() { __exe_or_bin_by_pwd 'pnpm' '/usr/bin/pnpm' "$@"; }
 node() { __exe_or_bin_by_pwd 'node.exe' '/usr/bin/node' "$@"; }
 nvm() { __exe_or_bin_by_pwd 'nvm.exe' '/usr/bin/nvm' "$@"; }
+mvn() { __exe_or_bin_by_pwd 'mvn.exe' '/usr/bin/mvn' "$@"; }
 mono_repo() { __exe_or_bin_by_pwd 'mono_repo' 'mono_repo' "$@"; }
 
 __git_prompt_git() {
