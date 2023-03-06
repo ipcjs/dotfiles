@@ -24,6 +24,10 @@ print_help() {
     echo
     echo "创建/切换到hotfix/bug1分支:"
     echo "$bin_name hotfix/bug1"
+    echo
+    echo "版本:"
+    git --version
+    git submodule foreach --recursive git --version
 }
 
 fn_checkout() {
