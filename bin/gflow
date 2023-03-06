@@ -2,9 +2,13 @@
 TYPE_ARRAY=(pr hotfix feature chore docs style build ci refactor perf test)
 REMOTE=origin
 
-if test -z "$SKIP_USE_EXE" && test -n "$DOTFILES_REPO_DIR" && command -v git.exe &>/dev/null && [[ "$(pwd)" == /mnt/* ]]; then
-    echo "use wsl-shims: $(ls "$DOTFILES_REPO_DIR/wsl-shims")"
-    export PATH="$DOTFILES_REPO_DIR/wsl-shims:$PATH"
+if test -z "$SKIP_USE_EXE" && command -v git.exe &>/dev/null && [[ "$(pwd)" == /mnt/* ]]; then
+    echo 'use git.exe'
+    # shellcheck disable=SC2032
+    git() {
+        git.exe "$@"
+    }
+    export -f git
 fi
 
 print_help() {
