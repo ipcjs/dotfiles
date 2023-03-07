@@ -9,7 +9,7 @@ fi
 CUR_DIR=$(pwd)
 
 if [ -z "${ZSH_VERSION}" ]; then
-    echo "WARNING: using $SHELL($rc_file), zsh is recommended shell."
+    echo "WARNING: using $0($rc_file), zsh is recommended shell."
 fi
 
 _install=""
