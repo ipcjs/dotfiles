@@ -42,7 +42,7 @@ fn_checkout() {
         git push $REMOTE "$branch_name:$branch_name" -u
     fi
     # Force creating a branch with the same name in a submodule
-    git submodule foreach --recursive "git switch -C $branch_name && git rev-parse @{u} &>/dev/null || git branch -u $REMOTE/$branch_name &>/dev/null || echo 当前子模块未追踪到远端"
+    git submodule foreach --recursive "git checkout -B $branch_name && git rev-parse @{u} &>/dev/null || git branch -u $REMOTE/$branch_name &>/dev/null || echo 当前子模块未追踪到远端"
     set +e
 }
 
