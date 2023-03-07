@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 echo "source $DOTFILES_REPO_DIR/etc/init.sh"
 
 # 交互式模式的初始化脚本, 防止被加载两次
@@ -55,6 +55,17 @@ alias fpget='flutter pub get'
 alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
 alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
 alias cflutter+='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter+'
+
+if [ -n "$ZSH_VERSION" ]; then
+    # config zsh
+    : # empty command
+else
+    # config bash
+    # shellcheck disable=SC1091
+    source "$DOTFILES_REPO_DIR/etc/z.sh"
+    # shellcheck disable=SC1091
+    source "$DOTFILES_REPO_DIR/zsh/custom/plugins/gflow/gflow.plugin.zsh"
+fi
 
 function sc() {
     target=$1

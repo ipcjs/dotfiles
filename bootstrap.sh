@@ -94,16 +94,7 @@ fi
 
 if [ -z "${ZSH_VERSION}" ]; then
     # setup bash plugins
-    if ! command -v z; then
-        echo '==install z...'
-        # shellcheck disable=SC2016
-        echo 'source $DOTFILES_REPO_DIR/etc/z.sh' >>$rc_file
-    fi
-    if ! command -v __gflow_branch_complete; then
-        echo '==install gflow.plugin...'
-        # shellcheck disable=SC2016
-        echo 'source $DOTFILES_REPO_DIR/zsh/custom/plugins/gflow/gflow.plugin.zsh' >>$rc_file
-    fi
+    : # empty command
 else
     # setup zsh
     if [ -d "$ZSH/custom/plugins/zsh-autosuggestions" ]; then
