@@ -17,6 +17,11 @@ print_help() {
     echo
     echo "Usage: $bin_name <branch_name>"
     echo
+    echo "## 配置"
+    echo 
+    echo "开启切换子模块功能:"
+    echo "export GFLOW_SWITCH_SUBMODULE=Y"
+    echo
     echo "## 实例"
     echo
     echo "清理本地分支:"
@@ -41,8 +46,10 @@ fn_checkout() {
         git checkout -b "$branch_name" --no-track "$default_remote_branch"
         git push $REMOTE "$branch_name:$branch_name" -u
     fi
-    # Force creating a branch with the same name in a submodule
-    git submodule foreach --recursive bash -c "git checkout -B $branch_name && git rev-parse @{u} &>/dev/null || git branch -u $REMOTE/$branch_name &>/dev/null || echo 当前子模块未追踪到远端"
+    if [ -n "${GFLOW_SWITCH_SUBMODULE}" ]; then
+        # Force creating a branch with the same name in a submodule
+        git submodule foreach --recursive bash -c "git checkout -B $branch_name && git rev-parse @{u} &>/dev/null || git branch -u $REMOTE/$branch_name &>/dev/null || echo 当前子模块未追踪到远端"
+    fi
     set +e
 }
 
@@ -51,7 +58,9 @@ fn_clean() {
     ## delete merged branch
     git branch --merged | grep -v '\*' | xargs git branch -d
     # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
-    git submodule foreach --recursive "git branch --merged | grep -v '\*' | xargs git branch -d"
+    if [ -n "${GFLOW_SWITCH_SUBMODULE}" ]; then
+        git submodule foreach --recursive "git branch --merged | grep -v '\*' | xargs git branch -d"
+    fi
 
     ## delete squashed branch
     # https://stackoverflow.com/questions/43489303/how-can-i-delete-all-git-branches-which-have-been-squash-and-merge-via-github
