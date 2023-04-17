@@ -55,17 +55,21 @@ fn_checkout() {
 
 fn_clean() {
     fn_checkout "$main_branch"
-    ## delete merged branch
+    ## Delete merged branch
     git branch --merged | grep -v '\*' | xargs git branch -d
     # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
     if [ -n "${GFLOW_SWITCH_SUBMODULE}" ]; then
         git submodule foreach --recursive "git branch --merged | grep -v '\*' | xargs git branch -d"
     fi
 
-    ## delete squashed branch
+    ## Remove tracking branches no longer on remote
+    # https://stackoverflow.com/questions/7726949/remove-tracking-branches-no-longer-on-remote/33548037#33548037
+    git fetch -p && for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == "[gone]" {sub("refs/heads/", "", $1); print $1}'); do git branch -D "$branch"; done
+
+    ## Delete squashed branch
     # https://stackoverflow.com/questions/43489303/how-can-i-delete-all-git-branches-which-have-been-squash-and-merge-via-github
-    # shellcheck disable=SC2162,SC2046,SC1083,SC1001,SC2086
-    git checkout -q "$main_branch" && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base "$main_branch" "$branch") && [[ $(git cherry "$main_branch" $(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m _)) == "-"* ]] && git branch -D "$branch"; done
+    # disable_shellcheck disable=SC2162,SC2046,SC1083,SC1001,SC2086
+    # git checkout -q "$main_branch" && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base "$main_branch" "$branch") && [[ $(git cherry "$main_branch" $(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m _)) == "-"* ]] && git branch -D "$branch"; done
 }
 
 default_remote_branch=$(git rev-parse --abbrev-ref "$REMOTE/HEAD") || exit 1
