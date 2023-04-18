@@ -54,7 +54,8 @@ fn_checkout() {
 }
 
 fn_clean() {
-    fn_checkout "$main_branch"
+    # fn_checkout "$main_branch"
+
     ## Delete merged branch
     git branch --merged | grep -v '\*' | xargs git branch -d
     # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
