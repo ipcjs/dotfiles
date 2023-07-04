@@ -50,7 +50,7 @@ fi
 unset PUB_HOSTED_URL
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 alias fp='flutter pub'
-alias fpx='flutter pub run'
+alias fpx='dart run'
 alias fpget='flutter pub get'
 alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
 alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
