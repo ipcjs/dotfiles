@@ -56,6 +56,8 @@ alias cfpget='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter pub get'
 alias cflutter='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter'
 alias cflutter+='PUB_HOSTED_URL=https://pub.flutter-io.cn flutter+'
 
+alias sudocode='SUDO_EDITOR="$(which code) --wait" sudoedit'
+
 if [ -n "$ZSH_VERSION" ]; then
     # config zsh
     : # empty command
