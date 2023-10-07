@@ -27,12 +27,11 @@ a.amap.com,\
 cdn.ipcjs.top,\
 tg.ipcjs.top,\
 myip4.ipip.net,\
-baidu.com,\
 mirrors.aliyun.com,\
 download.pytorch.org,\
 *.coding.net,\
 *.myqcloud.com,\
-apple.com"
+baidu.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
 print="true"
