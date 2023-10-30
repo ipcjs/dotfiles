@@ -63,6 +63,7 @@ open() {
   cmd.exe /c start "$@"
 }
 
+ssh() { __exe_or_bin_by_pwd 'ssh.exe' '/usr/bin/ssh' "$@"; }
 git() { __exe_or_bin_by_pwd 'git.exe' '/usr/bin/git' "$@"; }
 npm() { __exe_or_bin_by_pwd 'npm' '/usr/bin/npm' "$@"; }
 npx() { __exe_or_bin_by_pwd 'npx' '/usr/bin/npx' "$@"; }
