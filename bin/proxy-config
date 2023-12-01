@@ -31,6 +31,7 @@ mirrors.aliyun.com,\
 download.pytorch.org,\
 *.coding.net,\
 *.myqcloud.com,\
+marketplace.visualstudio.com,\
 baidu.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
