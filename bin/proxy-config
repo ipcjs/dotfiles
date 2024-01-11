@@ -32,6 +32,7 @@ download.pytorch.org,\
 *.coding.net,\
 *.myqcloud.com,\
 marketplace.visualstudio.com,\
+npm.pkg.github.com,\
 baidu.com"
 no_proxy_gradle=$(echo "$no_proxy" | tr ',' '|')
 
