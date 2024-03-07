@@ -85,7 +85,7 @@ case "$1" in
     clean)
         fn_clean
         ;;
-    "$main_branch")
+    "$main_branch" | main)
         fn_checkout "$main_branch"
         ;;
     feat/*)
