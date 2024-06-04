@@ -10,6 +10,7 @@ no_proxy="localhost,\
 192.168.0.230,\
 dl.google.com,\
 maven.aliyun.com,\
+maven.jpushoa.com,\
 cdn.npm.taobao.org,\
 registry.npm.taobao.org,\
 npmmirror.com,\
