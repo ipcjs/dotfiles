@@ -31,10 +31,7 @@ print_help() {
     echo "$bin_name hotfix/bug1"
     echo
     echo "切换到主分支, 并自动储藏未提交的代码"
-    echo "$bin_name -s main"
-    echo
-    echo "切换到主分支, 并且不自动储藏"
-    echo "$bin_name --no-auto-stash main"
+    echo "$bin_name main -s"
     echo
     echo "版本:"
     git --version
@@ -51,6 +48,7 @@ get_stash_message() {
 
 fn_checkout() {
     local branch_name=$1
+    local auto_stash=$2
     local is_checkout
     git fetch --prune
     set -e
@@ -113,42 +111,49 @@ if ! [[ "${default_remote_branch}" =~ ^"$REMOTE"/(main|master)$ ]]; then
 fi
 main_branch=${default_remote_branch#*/}
 
-auto_stash=''
+checkout_auto_stash=''
+checkout_branch=''
 while test $# -gt 0; do
     case "$1" in
         clean)
             fn_clean
+            exit $?
             ;;
         -s | --auto-stash)
-            auto_stash='Y'
+            checkout_auto_stash='Y'
             ;;
         --no-auto-stash)
-            auto_stash=''
+            checkout_auto_stash=''
             ;;
         "$main_branch" | main)
-            fn_checkout "$main_branch"
+            checkout_branch="$main_branch"
             ;;
         feat/*)
-            fn_checkout "feature/${1#*/}"
+            checkout_branch="feature/${1#*/}"
             ;;
         fix/*)
-            fn_checkout "hotfix/${1#*/}"
+            checkout_branch="hotfix/${1#*/}"
             ;;
         */*)
             branch_prefix="${1%%/*}"
             # shellcheck disable=SC2076
             if [[ " ${TYPE_ARRAY[*]} " =~ " $branch_prefix " ]]; then
-                fn_checkout "$1"
+                checkout_branch="$1"
             else
                 echo "分支前缀必须是如下名字之一: ${TYPE_ARRAY[*]}"
             fi
             ;;
         '' | -h | --help)
             print_help
+            exit 0
             ;;
         *)
-            fn_checkout "${TYPE_ARRAY[0]}/$1"
+            checkout_branch="${TYPE_ARRAY[0]}/$1"
             ;;
     esac
     shift
 done
+
+if [ -n "$checkout_branch" ]; then
+    fn_checkout "$checkout_branch" "$checkout_auto_stash"
+fi
