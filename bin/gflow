@@ -30,10 +30,10 @@ print_help() {
     echo "创建/切换到hotfix/bug1分支:"
     echo "$bin_name hotfix/bug1"
     echo
-    echo "切换到主分支, 并自动stash未提交的代码"
+    echo "切换到主分支, 并自动储藏未提交的代码"
     echo "$bin_name -s main"
     echo
-    echo "切换到主分支, 并禁用自动stash代码"
+    echo "切换到主分支, 并且不自动储藏"
     echo "$bin_name --no-auto-stash main"
     echo
     echo "版本:"
@@ -57,7 +57,7 @@ fn_checkout() {
 
     if [ -n "$auto_stash" ]; then
         if ! git diff --quiet HEAD --; then
-            echo "Uncommitted changes detected. Stashing changes..."
+            echo "检测到未提交的代码, 储藏中..."
             git stash push -u -m "$(get_stash_message)"
         fi
     fi
@@ -78,7 +78,7 @@ fn_checkout() {
     if [ -n "$auto_stash" ] && [ -n "$is_checkout" ]; then
         current_stash="$(git stash list | grep "$(get_stash_message)" | head -n1)"
         if [ -n "$current_stash" ]; then
-            echo "Applying automatic stash: $current_stash..."
+            echo "应用自动储藏: $current_stash..."
             git stash pop "$(echo "$current_stash" | cut -d ':' -f1)"
         fi
     fi
