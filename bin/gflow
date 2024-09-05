@@ -22,6 +22,9 @@ print_help() {
     echo "开启切换子模块功能:"
     echo "export GFLOW_SWITCH_SUBMODULE=Y"
     echo
+    echo "开启自动储藏功能:"
+    echo "export GFLOW_AUTO_STASH=Y"
+    echo
     echo "## 实例"
     echo
     echo "清理本地分支:"
@@ -111,7 +114,7 @@ if ! [[ "${default_remote_branch}" =~ ^"$REMOTE"/(main|master)$ ]]; then
 fi
 main_branch=${default_remote_branch#*/}
 
-checkout_auto_stash=''
+checkout_auto_stash="${GFLOW_AUTO_STASH}"
 checkout_branch=''
 while test $# -gt 0; do
     case "$1" in
