@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-echo "source $DOTFILES_REPO_DIR/etc/init.sh"
 
 # 交互式模式的初始化脚本, 防止被加载两次
 if [ -z "$_INIT_SH_LOADED" ]; then
@@ -13,6 +12,8 @@ case "$-" in
     *i*) ;;
     *) return ;;
 esac
+
+echo "source $DOTFILES_REPO_DIR/etc/init.sh"
 
 # export _INIT_SH_LOADED
 
