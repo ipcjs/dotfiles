@@ -19,3 +19,7 @@ plugins=(
 if type tmux >/dev/null 2>&1; then
     plugins+=(tmux)
 fi
+
+if type docker >/dev/null 2>&1; then
+    plugins+=(docker)
+fi
