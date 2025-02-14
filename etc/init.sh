@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=sh
 
 # 交互式模式的初始化脚本, 防止被加载两次
 if [ -z "$_INIT_SH_LOADED" ]; then
@@ -62,28 +62,28 @@ alias sudocode='SUDO_EDITOR="$(which code) --wait" sudoedit'
 if [ -n "$ZSH_VERSION" ]; then
     # config zsh
     : # empty command
-else
+elif [ -n "$BASH_VERSION" ]; then
     # config bash
     # shellcheck disable=SC1091
-    source "$DOTFILES_REPO_DIR/etc/z.sh"
+    . "$DOTFILES_REPO_DIR/etc/z.sh"
     # shellcheck disable=SC1091
-    source "$DOTFILES_REPO_DIR/zsh/custom/plugins/gflow/gflow.plugin.zsh"
+    . "$DOTFILES_REPO_DIR/zsh/custom/plugins/gflow/gflow.plugin.zsh"
 fi
 
-function sc() {
+sc() {
     target=$1
     cmd=$2
     sudo systemctl $cmd $target
 }
 
-function is-wsl-2() {
+is_wsl_2() {
     uname -r | grep WSL2 >/dev/null 2>&1
 }
 
-function dotfiles_update() {
+dotfiles_update() {
     cd "$DOTFILES_REPO_DIR" || return 1
     git pull --rebase && git submodule update --init --recursive || return 1
     cd - || return 1
 
-    source "$DOTFILES_REPO_DIR/bootstrap.sh"
+    . "$DOTFILES_REPO_DIR/bootstrap.sh"
 }
