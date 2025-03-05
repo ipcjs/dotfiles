@@ -66,19 +66,16 @@ if [ -n "$_install" ]; then
             fi
         fi
         # ensure omz is installed, then update .zshrc
-        echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
+        mv $rc_file "$rc_file.pre-dotfiles"
 
-        # git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        # ln -s "$DOTFILES_REPO_DIR/zsh/git-bash.zsh-theme" ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/git-bash.zsh-theme
         # shellcheck disable=SC2016
         {
-            echo 'source $DOTFILES_REPO_DIR/zsh/config'
+            echo 'export ZSH="$HOME/.on-my-zsh"'
+            echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR"
             echo
+            echo 'source $DOTFILES_REPO_DIR/zsh/config'
             echo 'source $ZSH/oh-my-zsh.sh'
         } >>$rc_file
-        echo 'delete old zsh variable by yourself. Enter to continue...'
-        read -r
-        vi $rc_file
     else
         echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR" >>$rc_file
     fi
