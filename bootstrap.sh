@@ -70,7 +70,7 @@ if [ -n "$_install" ]; then
 
         # shellcheck disable=SC2016
         {
-            echo 'export ZSH="$HOME/.on-my-zsh"'
+            echo 'export ZSH="$HOME/.oh-my-zsh"'
             echo "export DOTFILES_REPO_DIR=$DOTFILES_REPO_DIR"
             echo
             echo 'source $DOTFILES_REPO_DIR/zsh/config'
