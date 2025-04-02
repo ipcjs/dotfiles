@@ -16,7 +16,8 @@ function find_envs () {
     local env_args=()
     if [ -f ".env" ]; then
         env_args+=("--env-file=.env")
-    elif [ -f ".env.local" ]; then
+    fi
+    if [ -f ".env.local" ]; then
         env_args+=("--env-file=.env.local")
     fi
     echo "${env_args[@]}"
