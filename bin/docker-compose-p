@@ -40,5 +40,5 @@ fi
 project_name=$1
 shift
 
-echo docker compose $(find_envs) $(find_project $project_name) "$@"
+docker compose $(find_envs) $(find_project $project_name) "$@"
 
