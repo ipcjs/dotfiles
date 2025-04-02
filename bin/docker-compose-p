@@ -1,0 +1,41 @@
+#!/bin/bash
+function find_project() {
+    local name=$1
+    if [ -f "$name/docker-compose.yml" ]; then
+        echo "-f $name/docker-compose.yml"
+    elif [ -f "docker-$name/docker-compose.yml" ]; then
+        echo "-f docker-$name/docker-compose.yml"
+    elif [ -f "docker-service-$name/docker-compose.yml" ]; then
+        echo "-f docker-service-$name/docker-compose.yml"
+    else
+        echo "-p $name"
+    fi
+}
+
+function find_envs () {
+    local env_args=()
+    if [ -f ".env" ]; then
+        env_args+=("--env-file=.env")
+    elif [ -f ".env.local" ]; then
+        env_args+=("--env-file=.env.local")
+    fi
+    echo "${env_args[@]}"
+}
+
+function print_help() {
+    echo "Execute the docker-compose command in the subdirectory and automatically add the .env file in the current directory"
+    echo
+    echo "Usage: $(basename $0) [project_name] [docker-compose options...]"
+    echo "       $(basename $0) --help"
+}
+
+if [[ "$1" == "--help" ]]; then
+    print_help
+    exit 0
+fi
+
+project_name=$1
+shift
+
+docker compose $(find_envs) $(find_project $project_name) "$@"
+
