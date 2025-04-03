@@ -1,16 +1,16 @@
 #!/bin/bash
-function find_project() {
+set -e
+
+function find_compose_file() {
     local name=$1
     if [ -f "$name/docker-compose.yml" ]; then
-        echo "-f $name/docker-compose.yml"
+        echo "$name/docker-compose.yml"
     elif [ -f "$name/docker-compose.yaml" ]; then
-        echo "-f $name/docker-compose.yaml"
+        echo "$name/docker-compose.yaml"
     elif [ -f "docker-$name/docker-compose.yml" ]; then
-        echo "-f docker-$name/docker-compose.yml"
+        echo "docker-$name/docker-compose.yml"
     elif [ -f "docker-service-$name/docker-compose.yml" ]; then
-        echo "-f docker-service-$name/docker-compose.yml"
-    else
-        echo "-p $name"
+        echo "docker-service-$name/docker-compose.yml"
     fi
 }
 
@@ -30,15 +30,33 @@ function print_help() {
     echo
     echo "Usage: $(basename $0) [project_name] [docker-compose options...]"
     echo "       $(basename $0) --help"
+    echo
+    echo "Options:"
+    echo "  project_name: the directory name to execute the compose command, set to . means to execute the compose command in all subdirectories"
 }
 
+allow_use_project_name=
 if [[ "$1" == "--help" ]]; then
     print_help
     exit 0
+elif [[ "$1" == "." ]]; then
+    project_names=(*)
+    shift
+else
+    project_names=("$1")
+    shift
+    allow_use_project_name=Y
 fi
 
-project_name=$1
-shift
+for project_name in "${project_names[@]}"; do
+    compose_file="$(find_compose_file $project_name)"
+    if [ -n "$compose_file" ]; then
+        project_args=(-f "$compose_file")
+    elif [ -n "$allow_use_project_name" ]; then
+        project_args=(-p "$project_name")
+    else
+        continue
+    fi
 
-docker compose $(find_envs) $(find_project $project_name) "$@"
-
+    docker compose $(find_envs) "${project_args[@]}" "$@"
+done
