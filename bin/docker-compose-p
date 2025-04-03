@@ -1,41 +1,39 @@
 #!/bin/bash
 set -e
 
-function find_compose_file() {
+function find_project_dir() {
     local name=$1
-    if [ -f "$name/compose.yaml" ]; then
-        echo "$name/compose.yaml"
-    elif [ -f "$name/docker-compose.yaml" ]; then
-        echo "$name/docker-compose.yaml"
-    elif [ -f "$name/docker-compose.yml" ]; then
-        echo "$name/docker-compose.yml"
-    elif [ -f "docker-$name/docker-compose.yml" ]; then
-        echo "docker-$name/docker-compose.yml"
-    elif [ -f "docker-service-$name/docker-compose.yml" ]; then
-        echo "docker-service-$name/docker-compose.yml"
-    fi
+    for dir in "$name" "docker-$name" "docker-service-$name"; do
+        if [ -d "$dir" ]; then
+            for file in "$dir/compose.yaml" "$dir/compose.yml" "$dir/docker-compose.yaml" "$dir/docker-compose.yml"; do
+                if [ -f "$file" ]; then
+                    echo "$(realpath "$dir")"
+                    return
+                fi
+            done
+        fi
+    done
 }
 
 function find_envs () {
     local env_args=()
     if [ -f ".env" ]; then
-        env_args+=("--env-file=.env")
+        env_args+=("--env-file=$(realpath .env)")
     fi
     if [ -f ".env.local" ]; then
-        env_args+=("--env-file=.env.local")
+        env_args+=("--env-file=$(realpath .env.local)")
     fi
     echo "${env_args[@]}"
 }
 
 function print_help() {
-    echo "Execute the docker-compose command in the subdirectory and automatically add the .env file in the current directory"
+    echo "Execute the docker-compose command in the subdirectory and automatically add the .env and .env.local file in the current directory and the subdirectory."
     echo
     echo "Usage: $(basename $0) [project_name] [docker-compose options...]"
     echo "       $(basename $0) --all [docker-compose options...]"
     echo "       $(basename $0) --help"
 }
 
-allow_use_project_name=
 if [[ "$1" == "--help" ]]; then
     print_help
     exit 0
@@ -45,18 +43,22 @@ elif [[ "$1" == "--all" ]]; then
 else
     project_names=("$1")
     shift
-    allow_use_project_name=Y
 fi
 
+cur_dir="$(pwd)"
+root_envs=($(find_envs))
 for project_name in "${project_names[@]}"; do
-    compose_file="$(find_compose_file $project_name)"
-    if [ -n "$compose_file" ]; then
-        project_args=(-f "$compose_file")
-    elif [ -n "$allow_use_project_name" ]; then
-        project_args=(-p "$project_name")
-    else
+    cd "$cur_dir"
+    project_dir="$(find_project_dir "$project_name")"
+    if [ -z "$project_dir" ]; then
         continue
     fi
 
-    docker compose $(find_envs) "${project_args[@]}" "$@"
+    envs=("${root_envs[@]}")
+    if [[ "$cur_dir" != "$project_dir" ]]; then
+        cd "$project_dir"
+        envs+=($(find_envs))
+    fi
+
+    docker compose "${envs[@]}" "$@"
 done
