@@ -31,11 +31,19 @@ function print_help() {
     echo
     echo "Usage: $(basename $0) [project_name] [docker-compose options...]"
     echo "       $(basename $0) --all [docker-compose options...]"
+    echo "       $(basename $0) --clear"
     echo "       $(basename $0) --help"
+    echo
+    echo "Options:"
+    echo "  --all: Execute the docker-compose command in all subdirectories."
+    echo "  --clear: Clear all docker-compose projects."
 }
 
 if [[ "$1" == "--help" ]]; then
     print_help
+    exit 0
+elif [[ "$1" == "--clear" ]]; then
+    docker compose ls -a | awk 'NR>1 {print $1}' | xargs -I {} docker compose -p {} down
     exit 0
 elif [[ "$1" == "--all" ]]; then
     project_names=(*)
