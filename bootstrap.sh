@@ -32,12 +32,15 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     echo '==clone dotfiles repo...'
     if ! command -v git &>/dev/null; then
         echo "install git..."
-        if ! command -v apt-get &>/dev/null; then
+        if command -v apt-get &>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y git
+        elif command -v yum &>/dev/null; then
+            sudo yum install -y git
+        else
             echo "apt-get does not exist, please install git manually"
             exit 1
         fi
-        sudo apt-get update
-        sudo apt-get install -y git
     fi
     # config git alias
     git --version
@@ -47,9 +50,13 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     if [ "$(basename "$(pwd)")" = "dotfiles" ]; then
         DOTFILES_REPO_DIR=$(pwd)
     else
+        repo_name=dotfiles
+        if [ "$(pwd)" = "$HOME" ]; then
+            repo_name=.dotfiles
+        fi
         echo '==clone dofiles repo...'
-        git clone --recursive https://github.com/ipcjs/dotfiles.git
-        DOTFILES_REPO_DIR=$(pwd)/dotfiles
+        git clone --recursive https://github.com/ipcjs/dotfiles.git $repo_name
+        DOTFILES_REPO_DIR="$(pwd)/$repo_name"
     fi
     _install="true"
 fi
