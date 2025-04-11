@@ -5,9 +5,9 @@
 full_path(){
     _path=$1
     if [ "$(uname -s)" = "Darwin" ]; then
-        echo $_path
+        echo "$_path"
     else 
-        realpath $_path
+        realpath "$_path"
     fi
 }
 

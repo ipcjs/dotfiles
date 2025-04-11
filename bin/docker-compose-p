@@ -7,7 +7,7 @@ function find_project_dir() {
         if [ -d "$dir" ]; then
             for file in "$dir/compose.yaml" "$dir/compose.yml" "$dir/docker-compose.yaml" "$dir/docker-compose.yml"; do
                 if [ -f "$file" ]; then
-                    echo "$(realpath "$dir")"
+                    realpath "$dir"
                     return
                 fi
             done
@@ -29,10 +29,10 @@ function find_envs () {
 function print_help() {
     echo "Execute the docker-compose command in the subdirectory and automatically add the .env and .env.local file in the current directory and the subdirectory."
     echo
-    echo "Usage: $(basename $0) [project_name] [docker-compose options...]"
-    echo "       $(basename $0) --all [docker-compose options...]"
-    echo "       $(basename $0) --clear"
-    echo "       $(basename $0) --help"
+    echo "Usage: $(basename "$0") [project_name] [docker-compose options...]"
+    echo "       $(basename "$0") --all [docker-compose options...]"
+    echo "       $(basename "$0") --clear"
+    echo "       $(basename "$0") --help"
     echo
     echo "Options:"
     echo "  --all: Execute the docker-compose command in all subdirectories."
