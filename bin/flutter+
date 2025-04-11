@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# find . -type f -name 'pubspec.yaml'
+
+full_path(){
+    _path=$1
+    if [ "$(uname -s)" = "Darwin" ]; then
+        echo $_path
+    else 
+        realpath $_path
+    fi
+}
+
+work_dir=$(full_path "$(pwd)")
+
+FLUTTER=flutter
+if [ -d ".fvm" ]; then
+    FLUTTER="fvm flutter"
+fi
+
+
+# exclude files in .dart_tool
+find . -type d -name '.dart_tool' -prune -o -name 'pubspec.yaml' -print0 | while read -r -d $'\0' file
+do
+    dir=$(full_path "$(dirname "$file")")
+    cd "$dir" || exit
+    echo
+    echo "run $FLUTTER in $(pwd)"
+    if [ -n "$WSL_DISTRO_NAME" ];then
+        # shellcheck disable=SC2086
+        cmd.exe /c $FLUTTER "$@"
+    else
+        $FLUTTER "$@"
+    fi
+    cd "$work_dir" || exit
+done
+
