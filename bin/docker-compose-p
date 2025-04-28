@@ -15,7 +15,7 @@ function find_project_dir() {
     done
 }
 
-function find_envs () {
+function find_envs() {
     local env_args=()
     if [ -f ".env" ]; then
         env_args+=("--env-file=$(realpath .env)")
@@ -77,9 +77,13 @@ for project_name in "${project_names[@]}"; do
     fi
     envs+=("${root_envs[@]}")
 
+    files_args=()
     if [[ -n "${project_file}" ]]; then
-        docker compose -f "$project_file" "${envs[@]}" "$@"
-    else
-        docker compose "${envs[@]}" "$@"
+        for file in "$project_file" "${project_file%.*}.override.yaml" "${project_file%.*}.override.yml"; do
+            if [ -f "$file" ]; then
+                files_args+=("-f" "$file")
+            fi
+        done
     fi
+    docker compose "${files_args[@]}" "${envs[@]}" "$@"
 done
