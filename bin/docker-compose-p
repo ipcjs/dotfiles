@@ -57,16 +57,29 @@ cur_dir="$(pwd)"
 root_envs=($(find_envs))
 for project_name in "${project_names[@]}"; do
     cd "$cur_dir"
-    project_dir="$(find_project_dir "$project_name")"
-    if [ -z "$project_dir" ]; then
-        continue
+    project_file=
+    project_dir=
+    if [ -f "$project_name" ]; then
+        project_file="$(realpath "$project_name")"
+        project_dir="$(dirname "$project_file")"
+    else
+        project_dir="$(find_project_dir "$project_name")"
+        if [ -z "$project_dir" ]; then
+            echo "Unknown project name: $project_name"
+            continue
+        fi
     fi
 
-    envs=("${root_envs[@]}")
+    envs=()
     if [[ "$cur_dir" != "$project_dir" ]]; then
         cd "$project_dir"
         envs+=($(find_envs))
     fi
+    envs+=("${root_envs[@]}")
 
-    docker compose "${envs[@]}" "$@"
+    if [[ -n "${project_file}" ]]; then
+        docker compose -f "$project_file" "${envs[@]}" "$@"
+    else
+        docker compose "${envs[@]}" "$@"
+    fi
 done
