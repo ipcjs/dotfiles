@@ -17,7 +17,7 @@ dotfiles_update
 
 ### WSL1
 
-1. 让WSL和Windows之间透传环境变量, 在Windows中设置`WSLENV`环境变量: `http_proxy:https_proxy:no_proxy:DROPBOX/p:SKIP_USE_EXE:ANDROID_SERIAL:PUB_HOSTED_URL:USERPROFILE/p`
+1. 让WSL和Windows之间透传环境变量, 在Windows中设置`WSLENV`环境变量: `http_proxy:https_proxy:no_proxy:DROPBOX/p:SKIP_USE_EXE:ANDROID_SERIAL:PUB_HOSTED_URL:USERPROFILE/p:ANDROID_SDK_ROOT/p:ELECTRON_MIRROR`
 
 2. 让WSL中无需`.exe`后缀执行Windows上的程序, 在~/.zshrc末尾添加: `source $DOTFILES_REPO_DIR/bin/use-exe`
 
