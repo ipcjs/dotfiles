@@ -1,0 +1,8 @@
+# shellcheck shell=bash
+bleopt history_share=1
+ble-face auto_complete='fg=gray'
+
+ble-bind -f C-k kill-line
+
+ble-bind -f up history-search-backward
+ble-bind -f down history-search-forward
