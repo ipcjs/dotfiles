@@ -1,4 +1,5 @@
 # shellcheck shell=bash
+# TODO: https://github.com/akinomyoga/ble.sh?tab=readme-ov-file#13-set-up-bashrc
 bleopt history_share=1
 ble-face auto_complete='fg=gray'
 
