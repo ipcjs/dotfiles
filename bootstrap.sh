@@ -47,7 +47,7 @@ if [ -z "$DOTFILES_REPO_DIR" ]; then
     git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
     git config --global alias.lga "log --all --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
 
-    if [ "$(basename "$(pwd)")" = "dotfiles" ]; then
+    if [ -f "./bootstrap.sh" ]; then
         DOTFILES_REPO_DIR=$(pwd)
     else
         repo_name=dotfiles
