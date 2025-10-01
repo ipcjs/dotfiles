@@ -78,7 +78,7 @@ fi
 sc() {
     target=$1
     cmd=$2
-    sudo systemctl $cmd $target
+    sudo systemctl "$cmd" "$target"
 }
 
 is_wsl_2() {
@@ -91,4 +91,8 @@ dotfiles_update() {
     cd - || return 1
 
     . "$DOTFILES_REPO_DIR/bootstrap.sh"
+}
+
+proxyconf() {
+    . "$DOTFILES_REPO_DIR/bin/proxy-config" "$@"
 }

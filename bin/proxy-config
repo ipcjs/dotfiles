@@ -2,7 +2,7 @@
 
 # loop to read arg
 # https://superuser.com/questions/186272/check-if-any-of-the-parameters-to-a-bash-script-match-a-string
-port="1080"
+port="7890"
 host="127.0.0.1"
 no_proxy="localhost,\
 127.0.0.1,\
@@ -99,8 +99,8 @@ while test $# -gt 0; do
             echo 'install proxy to rc and gradle file:'
             echo '. proxy-config install'
             echo
-            echo '--port=1080, set port'
-            echo '--host=127.0.0.1, set host'
+            echo "--port=$port, set port"
+            echo "--host=$host, set host"
             echo '--no-print, no print proxy url to console'
             return 1 2>/dev/null || exit 1
             ;;
