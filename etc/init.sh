@@ -19,6 +19,11 @@ echo "source $DOTFILES_REPO_DIR/etc/init.sh"
 
 # add bin to PATH
 export PATH="$DOTFILES_REPO_DIR/bin:$PATH"
+if [ -d "$HOME/Dropbox" ]; then
+    export DROPBOX="$HOME/Dropbox"
+    export PATH="$DROPBOX/bin:$PATH"
+fi
+
 
 # 整理 PATH，删除重复路径
 if [ -n "$PATH" ]; then
