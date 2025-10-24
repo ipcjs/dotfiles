@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+# Claudex - A CLI tool similar to Codex
+# Usage: claudex [OPTIONS] [ARGS...]
+#
+# Author: Claude AI Assistant
+# Description: This script provides a Codex-like interface for Claude CLI with
+# support for multiple profiles and automatic environment variable configuration
+
+set -e
+
+# Default values
+CONFIG_DIR="$HOME/.claudex"
+CONFIG_FILE="$CONFIG_DIR/config.toml"
+PROFILE=""
+CLAUDE_ARGS=()
+
+# Function to show help
+show_help() {
+    cat << 'EOF'
+Claudex CLI
+
+Usage: claudex [OPTIONS] [ARGS...]
+
+Options:
+  -p, --profile <CONFIG_PROFILE>
+          Configuration profile from config.toml to specify default options
+  -h, --help
+          Print this message
+  -V, --version
+          Print version
+
+All other arguments are passed directly to the claude command.
+EOF
+}
+
+# Parse command line options
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -p|--profile)
+            if [[ -n $2 && ! $2 == -* ]]; then
+                PROFILE="$2"
+                shift 2
+            else
+                echo "Error: --profile requires a profile name argument"
+                exit 1
+            fi
+            ;;
+        --help|-h)
+            show_help
+            exit 0
+            ;;
+        --version|-V)
+            echo "Claudex 1.0.0"
+            if command -v claude > /dev/null 2>&1; then
+                claude_version=$(claude --version 2>&1 | head -1 | sed 's/^\([0-9.]*\).*/\1/' || echo "Unknown")
+                echo "Cluade $claude_version"
+            else
+                echo "Claude CLI not found. Please install the Claude CLI first."
+            fi
+            exit 0
+            ;;
+        --)
+            # Pass everything after -- to claude
+            shift
+            while [[ $# -gt 0 ]]; do
+                CLAUDE_ARGS+=("$1")
+                shift
+            done
+            break
+            ;;
+        *)
+            # All non-option arguments go to claude
+            CLAUDE_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Main execution
+main() {
+    # Check if config file exists
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        echo "Error: Config file not found at $CONFIG_FILE"
+        echo "Please create a config file first."
+        exit 1
+    fi
+
+    echo "Using config file: $CONFIG_FILE"
+
+    # Get configuration from profile or use defaults
+    if [[ -n "$PROFILE" ]]; then
+        echo "Loading profile: $PROFILE"
+
+        # Get model_provider, model, and fast_model from profile
+        model_provider=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "model_provider" | head -1 | cut -d= -f2 | tr -d ' "')
+        model=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "^model[[:space:]]*=" | head -1 | cut -d= -f2 | tr -d ' "')
+        fast_model=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "^fast_model[[:space:]]*=" | head -1 | cut -d= -f2 | tr -d ' "')
+    else
+        # Use default configuration
+        model_provider=$(grep "^model_provider" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
+        model=$(grep "^model[[:space:]]*=" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
+        fast_model=$(grep "^fast_model[[:space:]]*=" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
+    fi
+
+    # Display configuration
+    if [[ -n "$model_provider" ]]; then
+        echo "Using model provider: $model_provider"
+    fi
+    if [[ -n "$model" ]]; then
+        echo "Using model: $model"
+    fi
+    if [[ -n "$fast_model" ]]; then
+        echo "Using fast model: $fast_model"
+    fi
+
+    # Set environment variables based on model_provider
+    if [[ -n "$model_provider" ]]; then
+        # Get base_url and env_key from model_provider section
+        base_url=$(grep -A5 "\[model_providers\.${model_provider}\]" "$CONFIG_FILE" | grep "base_url" | head -1 | cut -d= -f2 | tr -d ' "')
+        env_key=$(grep -A5 "\[model_providers\.${model_provider}\]" "$CONFIG_FILE" | grep "env_key" | head -1 | cut -d= -f2 | tr -d ' "')
+
+        # Set ANTHROPIC_BASE_URL
+        if [[ -n "$base_url" ]]; then
+            export ANTHROPIC_BASE_URL="$base_url"
+            echo "Using base_url: $base_url"
+        fi
+
+        # Set ANTHROPIC_AUTH_TOKEN from env_key
+        if [[ -n "$env_key" ]]; then
+            env_value=$(printenv "$env_key" 2>/dev/null || true)
+            if [[ -n "$env_value" ]]; then
+                export ANTHROPIC_AUTH_TOKEN="$env_value"
+            else
+                echo "Warning: Environment variable $env_key not found. Claude may fail to authenticate."
+            fi
+        fi
+    fi
+
+    # Set model environment variables if configured
+    if [[ -n "$model" ]]; then
+        export ANTHROPIC_MODEL="$model"
+    fi
+    if [[ -n "$fast_model" ]]; then
+        export ANTHROPIC_SMALL_FAST_MODEL="$fast_model"
+    fi
+
+    # Check if claude command exists
+    if ! command -v claude > /dev/null 2>&1; then
+        echo "Error: Claude CLI not found. Please install the Claude CLI first."
+        exit 1
+    fi
+
+    claude "${CLAUDE_ARGS[@]}"
+}
+
+# Run main function
+main "$@"
