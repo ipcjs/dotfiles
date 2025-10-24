@@ -53,7 +53,7 @@ while [[ $# -gt 0 ]]; do
         --version|-V)
             echo "Claudex 1.0.0"
             if command -v claude > /dev/null 2>&1; then
-                claude_version=$(claude --version 2>&1 | head -1 | sed 's/^\([0-9.]*\).*/\1/' || echo "Unknown")
+                claude_version=$(claude --version 2>&1 | head -n 1 | sed 's/^\([0-9.]*\).*/\1/' || echo "Unknown")
                 echo "Cluade $claude_version"
             else
                 echo "Claude CLI not found. Please install the Claude CLI first."
@@ -92,15 +92,17 @@ main() {
     if [[ -n "$PROFILE" ]]; then
         echo "Loading profile: $PROFILE"
 
-        # Get model_provider, model, and fast_model from profile
-        model_provider=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "model_provider" | head -1 | cut -d= -f2 | tr -d ' "')
-        model=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "^model[[:space:]]*=" | head -1 | cut -d= -f2 | tr -d ' "')
-        fast_model=$(grep -A5 "\[profiles\.${PROFILE}\]" "$CONFIG_FILE" | grep "^fast_model[[:space:]]*=" | head -1 | cut -d= -f2 | tr -d ' "')
+        # Get model_provider, model, and fast_model from profile using simpler approach
+        profile_section=$(awk "/\[profiles\.${PROFILE}\]/ {flag=1; next} flag && /^\[/ {exit} flag" "$CONFIG_FILE")
+        model_provider=$(echo "$profile_section" | grep "^model_provider" | cut -d= -f2 | tr -d ' "')
+        model=$(echo "$profile_section" | grep "^model[[:space:]]*=" | cut -d= -f2 | tr -d ' "')
+        fast_model=$(echo "$profile_section" | grep "^fast_model" | cut -d= -f2 | tr -d ' "')
     else
-        # Use default configuration
-        model_provider=$(grep "^model_provider" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
-        model=$(grep "^model[[:space:]]*=" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
-        fast_model=$(grep "^fast_model[[:space:]]*=" "$CONFIG_FILE" | head -1 | cut -d= -f2 | tr -d ' "')
+        # Use default configuration - only read from global section (before any [section] headers)
+        global_section=$(awk '/^\[/ {exit} {print}' "$CONFIG_FILE")
+        model_provider=$(echo "$global_section" | grep "^model_provider" | cut -d= -f2 | tr -d ' "')
+        model=$(echo "$global_section" | grep "^model[[:space:]]*=" | cut -d= -f2 | tr -d ' "')
+        fast_model=$(echo "$global_section" | grep "^fast_model" | cut -d= -f2 | tr -d ' "')
     fi
 
     # Display configuration
@@ -117,8 +119,9 @@ main() {
     # Set environment variables based on model_provider
     if [[ -n "$model_provider" ]]; then
         # Get base_url and env_key from model_provider section
-        base_url=$(grep -A5 "\[model_providers\.${model_provider}\]" "$CONFIG_FILE" | grep "base_url" | head -1 | cut -d= -f2 | tr -d ' "')
-        env_key=$(grep -A5 "\[model_providers\.${model_provider}\]" "$CONFIG_FILE" | grep "env_key" | head -1 | cut -d= -f2 | tr -d ' "')
+        provider_section=$(awk "/\[model_providers\.${model_provider}\]/ {flag=1; next} flag && /^\[/ {exit} flag" "$CONFIG_FILE")
+        base_url=$(echo "$provider_section" | grep "^base_url" | cut -d= -f2 | tr -d ' "')
+        env_key=$(echo "$provider_section" | grep "^env_key" | cut -d= -f2 | tr -d ' "')
 
         # Set ANTHROPIC_BASE_URL
         if [[ -n "$base_url" ]]; then
