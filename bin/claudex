@@ -95,25 +95,45 @@ main() {
         # Get model_provider, model, and fast_model from profile using simpler approach
         profile_section=$(awk "/\[profiles\.${PROFILE}\]/ {flag=1; next} flag && /^\[/ {exit} flag" "$CONFIG_FILE")
         model_provider=$(echo "$profile_section" | grep "^model_provider" | cut -d= -f2 | tr -d ' "')
+        # Legacy fields
         model=$(echo "$profile_section" | grep "^model[[:space:]]*=" | cut -d= -f2 | tr -d ' "')
         fast_model=$(echo "$profile_section" | grep "^fast_model" | cut -d= -f2 | tr -d ' "')
+        # New model fields
+        opus_model=$(echo "$profile_section" | grep "^opus_model" | cut -d= -f2 | tr -d ' "')
+        sonnet_model=$(echo "$profile_section" | grep "^sonnet_model" | cut -d= -f2 | tr -d ' "')
+        haiku_model=$(echo "$profile_section" | grep "^haiku_model" | cut -d= -f2 | tr -d ' "')
     else
         # Use default configuration - only read from global section (before any [section] headers)
         global_section=$(awk '/^\[/ {exit} {print}' "$CONFIG_FILE")
         model_provider=$(echo "$global_section" | grep "^model_provider" | cut -d= -f2 | tr -d ' "')
+        # Legacy fields
         model=$(echo "$global_section" | grep "^model[[:space:]]*=" | cut -d= -f2 | tr -d ' "')
         fast_model=$(echo "$global_section" | grep "^fast_model" | cut -d= -f2 | tr -d ' "')
+        # New model fields
+        opus_model=$(echo "$global_section" | grep "^opus_model" | cut -d= -f2 | tr -d ' "')
+        sonnet_model=$(echo "$global_section" | grep "^sonnet_model" | cut -d= -f2 | tr -d ' "')
+        haiku_model=$(echo "$global_section" | grep "^haiku_model" | cut -d= -f2 | tr -d ' "')
     fi
 
     # Display configuration
     if [[ -n "$model_provider" ]]; then
         echo "Using model provider: $model_provider"
     fi
+    # Show which models will be used (with backward compatibility)
     if [[ -n "$model" ]]; then
-        echo "Using model: $model"
+        echo "Using model (legacy): $model (default for opus and sonnet)"
     fi
     if [[ -n "$fast_model" ]]; then
-        echo "Using fast model: $fast_model"
+        echo "Using fast model (legacy): $fast_model (default for haiku)"
+    fi
+    if [[ -n "$opus_model" ]]; then
+        echo "Using opus model: $opus_model"
+    fi
+    if [[ -n "$sonnet_model" ]]; then
+        echo "Using sonnet model: $sonnet_model"
+    fi
+    if [[ -n "$haiku_model" ]]; then
+        echo "Using haiku model: $haiku_model"
     fi
 
     # Set environment variables based on model_provider
@@ -140,12 +160,27 @@ main() {
         fi
     fi
 
-    # Set model environment variables if configured
-    if [[ -n "$model" ]]; then
-        export ANTHROPIC_MODEL="$model"
+    # Set model with backward compatibility and priority:
+    # - 'model' → default for opus and sonnet
+    # - 'fast_model' → default for haiku
+    # - Specific fields override if set
+
+    # For opus: opus_model overrides model
+    final_opus="${opus_model:-$model}"
+    if [[ -n "$final_opus" ]]; then
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="$final_opus"
     fi
-    if [[ -n "$fast_model" ]]; then
-        export ANTHROPIC_SMALL_FAST_MODEL="$fast_model"
+
+    # For sonnet: sonnet_model overrides model
+    final_sonnet="${sonnet_model:-$model}"
+    if [[ -n "$final_sonnet" ]]; then
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="$final_sonnet"
+    fi
+
+    # For haiku: haiku_model overrides fast_model
+    final_haiku="${haiku_model:-$fast_model}"
+    if [[ -n "$final_haiku" ]]; then
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="$final_haiku"
     fi
 
     # Check if claude command exists
