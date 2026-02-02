@@ -7,6 +7,15 @@ else
     return
 fi
 
+# add bin to PATH
+export PATH="$DOTFILES_REPO_DIR/bin:$PATH"
+if [ -n "$DROPBOX" ]; then
+    export PATH="$DROPBOX/bin:$PATH"
+elif [ -d "$HOME/Dropbox" ]; then
+    export DROPBOX="$HOME/Dropbox"
+    export PATH="$DROPBOX/bin:$PATH"
+fi
+
 # 如果是非交互式则退出，比如 bash test.sh 这种调用 bash 运行脚本时就不是交互式; 只有直接敲 bash 进入的等待用户输入命令的那种模式才成为交互式，才往下初始化
 case "$-" in
     *i*) ;;
@@ -16,14 +25,6 @@ esac
 echo "source $DOTFILES_REPO_DIR/etc/init.sh"
 
 # export _INIT_SH_LOADED
-
-# add bin to PATH
-export PATH="$DOTFILES_REPO_DIR/bin:$PATH"
-if [ -z "$DROPBOX" ] && [ -d "$HOME/Dropbox" ]; then
-    export DROPBOX="$HOME/Dropbox"
-    export PATH="$DROPBOX/bin:$PATH"
-fi
-
 
 # 整理 PATH，删除重复路径
 if [ -n "$PATH" ]; then
