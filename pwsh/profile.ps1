@@ -11,6 +11,15 @@ function IsNonInteractiveShell {
     return $true
 }
 
+## Set environment variables
+if ($env:DROPBOX) {
+    $env:Path = "$env:DROPBOX\bin;$env:Path"
+} elseif (Test-Path "$HOME\Dropbox") {
+    $env:DROPBOX = "$HOME\Dropbox"
+    $env:Path = "$env:DROPBOX\bin;$env:Path"
+}
+$env:FLUTTER_STORAGE_BASE_URL = "https://storage.flutter-io.cn"
+
 if (IsNonInteractiveShell) {
     return
 }
