@@ -16,6 +16,9 @@ elif [ -d "$HOME/Dropbox" ]; then
     export PATH="$DROPBOX/bin:$PATH"
 fi
 
+# export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+
 # 如果是非交互式则退出，比如 bash test.sh 这种调用 bash 运行脚本时就不是交互式; 只有直接敲 bash 进入的等待用户输入命令的那种模式才成为交互式，才往下初始化
 case "$-" in
     *i*) ;;
@@ -53,9 +56,6 @@ if ! type l >/dev/null 2>&1; then
 fi
 
 # flutter
-# export PUB_HOSTED_URL=https://pub.flutter-io.cn
-unset PUB_HOSTED_URL
-export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 alias fp='flutter pub'
 alias fpx='dart run'
 alias fpget='flutter pub get'
