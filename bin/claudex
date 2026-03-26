@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Claudex - A CLI tool similar to Codex
 # Usage: claudex [OPTIONS] [ARGS...]
