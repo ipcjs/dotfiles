@@ -138,9 +138,10 @@ main() {
 
     # Set environment variables based on model_provider
     if [[ -n "$model_provider" ]]; then
-        # Get base_url and env_key from model_provider section
+        # Get base_url, auth_token, and env_key from model_provider section
         provider_section=$(awk "/\[model_providers\.${model_provider}\]/ {flag=1; next} flag && /^\[/ {exit} flag" "$CONFIG_FILE")
         base_url=$(echo "$provider_section" | grep "^base_url" | cut -d= -f2 | tr -d ' "')
+        auth_token=$(echo "$provider_section" | grep "^auth_token" | cut -d= -f2 | tr -d ' "')
         env_key=$(echo "$provider_section" | grep "^env_key" | cut -d= -f2 | tr -d ' "')
 
         # Set ANTHROPIC_BASE_URL
@@ -149,8 +150,10 @@ main() {
             echo "Using base_url: $base_url"
         fi
 
-        # Set ANTHROPIC_AUTH_TOKEN from env_key
-        if [[ -n "$env_key" ]]; then
+        # Set ANTHROPIC_AUTH_TOKEN: auth_token takes priority over env_key
+        if [[ -n "$auth_token" ]]; then
+            export ANTHROPIC_AUTH_TOKEN="$auth_token"
+        elif [[ -n "$env_key" ]]; then
             env_value=$(printenv "$env_key" 2>/dev/null || true)
             if [[ -n "$env_value" ]]; then
                 export ANTHROPIC_AUTH_TOKEN="$env_value"
