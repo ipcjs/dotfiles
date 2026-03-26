@@ -115,35 +115,44 @@ main() {
         haiku_model=$(echo "$global_section" | grep "^haiku_model" | cut -d= -f2 | tr -d ' "')
     fi
 
-    # Display configuration
-    if [[ -n "$model_provider" ]]; then
-        echo "Using model provider: $model_provider"
-    fi
-    # Show which models will be used (with backward compatibility)
-    if [[ -n "$model" ]]; then
-        echo "Using model (legacy): $model (default for opus and sonnet)"
-    fi
-    if [[ -n "$fast_model" ]]; then
-        echo "Using fast model (legacy): $fast_model (default for haiku)"
-    fi
-    if [[ -n "$opus_model" ]]; then
-        echo "Using opus model: $opus_model"
-    fi
-    if [[ -n "$sonnet_model" ]]; then
-        echo "Using sonnet model: $sonnet_model"
-    fi
-    if [[ -n "$haiku_model" ]]; then
-        echo "Using haiku model: $haiku_model"
-    fi
+    show_profile() {
+        local model_name=$1
+        # Display configuration
+        if [[ -n "$model_provider" ]]; then
+            if [[ -n "$model_name" ]]; then
+                echo "Using model provider: $model_name ($model_provider)"
+            else
+                echo "Using model provider: $model_provider"
+            fi
+        fi
+        # Show which models will be used (with backward compatibility)
+        if [[ -n "$model" ]]; then
+            echo "Using model (legacy): $model (default for opus and sonnet)"
+        fi
+        if [[ -n "$fast_model" ]]; then
+            echo "Using fast model (legacy): $fast_model (default for haiku)"
+        fi
+        if [[ -n "$opus_model" ]]; then
+            echo "Using opus model: $opus_model"
+        fi
+        if [[ -n "$sonnet_model" ]]; then
+            echo "Using sonnet model: $sonnet_model"
+        fi
+        if [[ -n "$haiku_model" ]]; then
+            echo "Using haiku model: $haiku_model"
+        fi
+    }
 
     # Set environment variables based on model_provider
     if [[ -n "$model_provider" ]]; then
         # Get base_url, auth_token, and env_key from model_provider section
         provider_section=$(awk "/\[model_providers\.${model_provider}\]/ {flag=1; next} flag && /^\[/ {exit} flag" "$CONFIG_FILE")
+        name=$(echo "$provider_section" | grep "^name" | cut -d= -f2 | tr -d ' "')
         base_url=$(echo "$provider_section" | grep "^base_url" | cut -d= -f2 | tr -d ' "')
         auth_token=$(echo "$provider_section" | grep "^auth_token" | cut -d= -f2 | tr -d ' "')
         env_key=$(echo "$provider_section" | grep "^env_key" | cut -d= -f2 | tr -d ' "')
 
+        show_profile "$name"
         # Set ANTHROPIC_BASE_URL
         if [[ -n "$base_url" ]]; then
             export ANTHROPIC_BASE_URL="$base_url"
@@ -161,6 +170,8 @@ main() {
                 echo "Warning: Environment variable $env_key not found. Claude may fail to authenticate."
             fi
         fi
+    else
+        show_profile ""
     fi
 
     # Set model with backward compatibility and priority:
