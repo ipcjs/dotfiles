@@ -89,7 +89,7 @@ fn_clean() {
     # fn_checkout "$main_branch"
 
     ## Delete merged branch
-    git branch --merged | grep -v '\*' | xargs git branch -d
+    git branch --merged | grep -v -E '^[*+]' | xargs git branch -d
     # git branch --merged | grep -v -E "\*|$main_branch" | xargs git branch -d
     if [ -n "${GFLOW_SWITCH_SUBMODULE}" ]; then
         git submodule foreach --recursive "git branch --merged | grep -v '\*' | xargs git branch -d"
