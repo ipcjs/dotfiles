@@ -68,7 +68,7 @@ fn_checkout() {
         is_checkout='Y'
     else
         git checkout -b "$branch_name" --no-track "$default_remote_branch"
-        git push $REMOTE "$branch_name:$branch_name" -u
+        git push $REMOTE "$branch_name:$branch_name" -u --no-verify
     fi
     if [ -n "${GFLOW_SWITCH_SUBMODULE}" ]; then
         # Force creating a branch with the same name in a submodule
